@@ -1,0 +1,9 @@
+.auth-container{
+    background-image: url(../src/assets/images/auth-bg.png);
+    background-size: cover;
+    background-position: center center;
+
+}
+.bg-overlay{
+    background: linear-gradient( 45deg,rgb(47, 140, 96,0.7),rgba(0, 0, 0, 0.3));
+}
