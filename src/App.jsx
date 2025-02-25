@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+// import reactLogo from './assets/react.svg'
+// import viteLogo from '/vite.svg'
 import './App.css'
 import Login from './Authentication/Login/Login'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -18,8 +18,36 @@ import CategoriesList from './Categories/CategoriesList/CategoriesList'
 import CategoryData from './Categories/CategoryData/CategoryData'
 import UsersList from './Users/UsersList/UsersList'
 import { ToastContainer } from 'react-toastify'
+import { jwtDecode } from 'jwt-decode'
+import ProtectedRoutes from './Shared/ProtectedRoutes/ProtectedRoutes'
+import ChangePass from './Authentication/Change-pass/ChangePass'
 
 function App() {
+ const [adminData,setAdminData]=useState(null)
+
+ const fillAdminData=()=>{
+  const token=localStorage.getItem('token');
+  const decoded = jwtDecode(token);
+
+  setAdminData(decoded)
+ }
+
+
+
+useEffect(() => {
+  // to handel referesh the page in case we logedin 
+ if(localStorage.getItem('token')) {
+  // console.log(localStorage.getItem('token'))
+  fillAdminData()
+
+}
+
+  
+}, []);
+
+
+
+
 const routes=createBrowserRouter([
   // auth layout
   {
@@ -27,18 +55,18 @@ path:'',
 element:<AuthLayout/>,
 errorElement:<NotFound/>,
 children:[
-  {index:true,element:<Login/>},
-  {path:"login",element:<Login/>},
+  {index:true,element:<Login fillAdminData={fillAdminData}/>},
+  {path:"login",element:<Login fillAdminData={fillAdminData}/>},
   {path:"register",element:<Register/>},
-  {path:"forget-pass",element:<ForgetPass/>},
-  {path:"reset-pass",element:<ResetPass/>},
+  {path:"forget-password",element:<ForgetPass/>},
+  {path:"reset-password",element:<ResetPass/>},
   {path:"verify-account",element:<VerifyAccount/>},
 ]
 },
 // master layout
 {
 path:'/dashboard',
-element:<MasterLayout/>,
+element:<ProtectedRoutes adminData={adminData} ><MasterLayout adminData={adminData} /></ProtectedRoutes>,
 errorElement:<NotFound/>,
 children:[
   // home
@@ -48,6 +76,7 @@ children:[
   {path:"category",element:<CategoriesList/>},
   {path:"categories-data",element:<CategoryData/>},
   {path:"users",element:<UsersList/>},
+  {path:"change-password",element:<ChangePass />},
 ]
 }
 
