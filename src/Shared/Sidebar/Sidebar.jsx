@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import sideBarLogo from '../../assets/images/sidebar-logo.png'
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import {  NavLink, useNavigate } from "react-router-dom";
@@ -15,14 +15,18 @@ export default function SideBar() {
   const navigate=useNavigate()
    const [isCollapsed,setIsCollapsed]=useState(false)
   const toggleCollapse=()=>{
+    
    setIsCollapsed(isCollapsed=>!isCollapsed)
   }
   const logOut=()=>{
     localStorage.removeItem('token')
     navigate('/login')
   }
+
+
+  // useEffect
   return <div className="sidebar-container vh-100">
-    <Sidebar collapsed={isCollapsed}>
+    <Sidebar collapsed={isCollapsed} breakPoint="lg">
   <Menu  menuItemStyles={{
       button: {
         [`&.active`]: {

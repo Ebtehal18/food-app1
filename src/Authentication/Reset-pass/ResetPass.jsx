@@ -21,8 +21,9 @@ export default function ResetPass() {
   const comfirmPassword=watch('confirmPassword')
 
   useEffect(()=>{
+  
     if(comfirmPassword)
-    trigger('confirmPassword')
+    trigger('confirmPassword') // Re-validate confirmPassword whenever it changes or the password changes
   },[password,comfirmPassword,trigger])
 
 

@@ -5,6 +5,7 @@ import Nodata from "../../Shared/Nodata/Nodata";
 import HeaderDetails from "../../Shared/HeaderDetails/HeaderDetails";
 import { axiosPrivateInstance, Categories_URLS } from "../../services/urls/urls";
 import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmation";
+import { formatDate } from "../../helpers/helpers";
 
 
 export default function CategoriesList() {
@@ -80,7 +81,7 @@ useEffect(()=>{
     {categories.length>0? categories.map((category,index)=><tr className={`table-row ${index%2==0?'odd-row':'even-row'}`} key={category.id}>
       <td scope="row">{category.id}</td>
       <td >{category.name}</td>
-      <td>{category.creationDate}</td>
+      <td>{formatDate(category?.creationDate)}</td>
       <td>
       <div class="dropdown">
   <button class="btn btn-dropdown " type="button" data-bs-toggle="dropdown" aria-expanded="false">

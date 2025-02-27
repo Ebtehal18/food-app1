@@ -73,7 +73,7 @@ export default function RecipesList() {
     {recipes.length>0? recipes.map((recipe,index)=><tr className={`table-row ${index%2==0?'odd-row':'even-row'}`} key={recipe.id}>
       <td scope="row">{recipe.id}</td>
       <td >{recipe.name}</td>
-      <td>{recipe.imagePath?<img src={`${baseURL}/${recipe.imagePath}`} alt={recipe.name} className="w-25" />:null}</td>
+      <td>{recipe.imagePath?<img src={`https://upskilling-egypt.com:3006/${recipe.imagePath}`} alt={recipe.name} className="recipe-img rounded-2" />:null}</td>
       <td>{recipe.price}</td>
       <td>{recipe.description}</td>
       <td>

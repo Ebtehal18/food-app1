@@ -18,6 +18,7 @@ const {register,formState:{errors,isSubmitting},handleSubmit,watch,trigger}=useF
   })
 
 async function onSubmit(values){
+  console.log(values)
 try {
   const {data}=await axiosPrivateInstance.put(Users_URLS.CHANGE_PASSWORD,values)
   console.log(data)
@@ -48,6 +49,8 @@ try {
         subtitle={'you can now fill the meals easily using the table and form , click here and sill it with the table !'}
         to={'/dashboard/recipes'}
         />
+
+        
          <div className="row w-100 z-2 position-absolute translate-middle top-50 start-50 justify-content-center align-items-center ">
                   <div className="col-md-5 bg-white rounded-3 px-5 py-3 ">
                     <div>

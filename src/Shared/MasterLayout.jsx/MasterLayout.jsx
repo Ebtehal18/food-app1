@@ -6,16 +6,15 @@ import SideBar from "../Sidebar/Sidebar";
 
 export default function MasterLayout({adminData}) {
   console.log(adminData)
-  return <div className="d-flex">
- <div className="">
+  return <div className="d-flex vh-100">
+ 
  <SideBar/>
- </div>
-<div className="w-100 ">
+ 
+<div className="w-100  d-flex flex-column ">
 <Navbar adminData={adminData}/>
-{/* <Header/> */}
- {/* <div className="over-flow-auto"> */}
+ <div className=" overflow-y-auto">
  <Outlet/>
- {/* </div> */}
+ </div>
 </div>
   </div>;
 }

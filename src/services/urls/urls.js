@@ -6,7 +6,7 @@ export const baseURL='https://upskilling-egypt.com:3006/api/v1';
 // axios.create('baseurl').post('endpoint')===>axiosinstance
 
 export const axiosPublicInstance = axios.create({
-    baseURL,
+    baseURL
   
 })
 // any requeset will have that headers
