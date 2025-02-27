@@ -11,7 +11,7 @@ import receipeIcon  from '../../assets/images/receipes-icon.png'
 import logoutIcon  from '../../assets/images/logout-icon.png'
 
 
-export default function SideBar() {
+export default function SideBare() {
   const navigate=useNavigate()
    const [isCollapsed,setIsCollapsed]=useState(false)
   const toggleCollapse=()=>{
