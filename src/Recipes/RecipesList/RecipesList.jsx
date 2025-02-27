@@ -5,18 +5,25 @@ import HeaderDetails from "../../Shared/HeaderDetails/HeaderDetails";
 import Nodata from "../../Shared/Nodata/Nodata";
 import { axiosPrivateInstance, baseURL, Recipes_URLS } from "../../services/urls/urls";
 import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmation";
+import Loading from "../../Shared/Loading/Loading";
 
 
 export default function RecipesList() {
   const [recipes,setRecipes]=useState([])
   const [selectedId,setSelectedId]=useState(null)
+  const [loading, setLoading] = useState(true);
+
  
   const getAllRecipes=async()=>{
+    setLoading(true);
+
   try {
     const {data}= await axiosPrivateInstance.get(Recipes_URLS.GET_RECIPIES(10,1))
     setRecipes(data?.data)
   } catch (error) {
     console.log(error)
+  }finally {
+    setLoading(false);
   }
   }
 
@@ -58,7 +65,7 @@ export default function RecipesList() {
          />
    
 <div className="px-4 text-center  ">
-  <table className="table table-striped mt-3 ">
+{loading?<Loading/>:  <table className="table table-striped mt-3 ">
   <thead>
     <tr>
       <th scope="col" >#</th>
@@ -94,7 +101,7 @@ export default function RecipesList() {
     </td>}
   
   </tbody>
-</table>
+</table>}
   </div>
   <DeleteComfirmation selectedId={selectedId} comfirmDeletion={comfirmDeletion}/>
   </>

@@ -6,21 +6,27 @@ import HeaderDetails from "../../Shared/HeaderDetails/HeaderDetails";
 import { axiosPrivateInstance, Categories_URLS } from "../../services/urls/urls";
 import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmation";
 import { formatDate } from "../../helpers/helpers";
+import Loading from "../../Shared/Loading/Loading";
 
 
 export default function CategoriesList() {
    
    const [categories,setCategories]=useState([])
    const [selectedId,setSelectedId]=useState(null)
+   const [loading, setLoading] = useState(true);
+   
  
   //  get all category fun api
    const getAllCategories=async()=>{
+    setLoading(true)
     try {
      const {data}=await axiosPrivateInstance.get(Categories_URLS.GET_CATEGORIES(10,1))
      console.log(data.data)
      setCategories(data?.data)
     } catch (error) {
       console.log(error)
+    }finally{
+      setLoading(false)
     }
    }
   // delete category by id api
@@ -68,7 +74,8 @@ useEffect(()=>{
 
 
   <div className="px-4 text-center  ">
-  <table className="table table-striped mt-3 ">
+    {loading?<Loading/>:
+     <table className="table table-striped mt-3 ">
   <thead>
     <tr>
       <th scope="col" >#</th>
@@ -101,7 +108,9 @@ useEffect(()=>{
   
   </tbody>
 </table>
+  }
   </div>
+ 
   <DeleteComfirmation selectedId={selectedId} comfirmDeletion={comfirmDeletion}/>
 
   </>;
