@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {  toast } from 'react-toastify';
 import { emailValidation, otpValidation, passwordComfirmValidation, passwordValidation } from "../../services/validations";
-import { axiosPublicInstance, Users_URLS } from "../../services/urls/urls";
+import { axiosPublicInstance } from "../../services/api/apiInstance";
+import { Users_URLS } from "../../services/api/apiConfig";
 
 export default function ResetPass() {
     const [showPassword,setShowPassword]=useState(false)
@@ -54,7 +55,7 @@ export default function ResetPass() {
             <div className="input-group mb-3">
              <div className="input-group-prepend">
               <span className="input-group-text h-100" id="basic-addon1">
-              <i className="fa fa-envelope"></i>
+              <i class="fa-solid fa-mobile-screen"></i>
             </span>
            </div>
            <input 

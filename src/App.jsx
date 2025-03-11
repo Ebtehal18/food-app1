@@ -21,29 +21,10 @@ import { ToastContainer } from 'react-toastify'
 import { jwtDecode } from 'jwt-decode'
 import ProtectedRoutes from './Shared/ProtectedRoutes/ProtectedRoutes'
 import ChangePass from './Authentication/Change-pass/ChangePass'
+import AuthContextProvider from './context/authContext'
 
 function App() {
- const [adminData,setAdminData]=useState(null)
-
- const fillAdminData=()=>{
-  const token=localStorage.getItem('token');
-  const decoded = jwtDecode(token);
-
-  setAdminData(decoded)
- }
-
-
-
-useEffect(() => {
-  // to handel referesh the page in case we logedin 
- if(localStorage.getItem('token')) {
-  // console.log(localStorage.getItem('token'))
-  fillAdminData()
-
-}
-
-  
-}, []);
+ 
 
 
 
@@ -55,8 +36,8 @@ path:'',
 element:<AuthLayout/>,
 errorElement:<NotFound/>,
 children:[
-  {index:true,element:<Login fillAdminData={fillAdminData}/>},
-  {path:"login",element:<Login fillAdminData={fillAdminData}/>},
+  {index:true,element:<Login/>},
+  {path:"login",element:<Login />},
   {path:"register",element:<Register/>},
   {path:"forget-password",element:<ForgetPass/>},
   {path:"reset-password",element:<ResetPass/>},
@@ -66,11 +47,11 @@ children:[
 // master layout
 {
 path:'/dashboard',
-element:<ProtectedRoutes adminData={adminData} ><MasterLayout adminData={adminData} /></ProtectedRoutes>,
+element:<ProtectedRoutes ><MasterLayout  /></ProtectedRoutes>,
 errorElement:<NotFound/>,
 children:[
   // home
-  {index:true,element:<Dashboard/>},
+  {index:true,element:<Dashboard />},
   {path:"recipes",element:<RecipesList/>},
   {path:"recipes-data",element:<RecipeData/>},
   {path:"category",element:<CategoriesList/>},
@@ -85,10 +66,12 @@ children:[
 
   return (
     <>
+    <AuthContextProvider>
     <RouterProvider router={routes}>
 
-    </RouterProvider>
-    <ToastContainer />
+</RouterProvider>
+<ToastContainer />
+    </AuthContextProvider>
     </>
   )
 }

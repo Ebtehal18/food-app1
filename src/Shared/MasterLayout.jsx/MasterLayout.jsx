@@ -7,14 +7,15 @@ import SideBare from "../Sidebar/SideBare";
 
 
 
-export default function MasterLayout({adminData}) {
-  console.log(adminData)
+export default function MasterLayout() {
+
+  
   return <div className="d-flex ">
  
  <SideBare/>
  
 <div className="w-100  d-flex flex-column  vh-100 overflow-y-auto">
-<Navbar adminData={adminData}/>
+<Navbar />
  <div className="">
  <Outlet/>
  </div>

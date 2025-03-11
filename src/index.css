@@ -3,7 +3,24 @@
 --input-bg: rgba(247, 247, 247, 1);
 --delete-color:rgba(204, 0, 0, 1);
 }
+body ,html{
+    overflow-x: hidden;
+}
+
+
 /* auth layout styling */
+.input-group{
+    border: 2px solid #E0E2E7;
+    border-radius: 8px;
+}
+.input-group:focus-within{
+    border-color: var(--main-color);
+}
+.form-control:focus ,
+.form-select:focus{
+    border: none;
+    box-shadow: none;
+}
 .auth-container{
     background-image: url(../src/assets/images/auth-bg.png);
     background-size: cover;
@@ -13,7 +30,13 @@
 .bg-overlay{
     background: linear-gradient( 45deg,rgb(47, 140, 96,0.7),rgba(0, 0, 0, 0.3));
 }
-
+.auth .login{
+    width: fit-content;
+}
+.auth .input-group i,
+.nav-item i{
+    color: rgba(131, 145, 161, 1);
+}
  form .btn-form,
  form .btn-form:focus,
  form .btn-form:hover,
@@ -28,17 +51,17 @@
 /* form .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active {
     background-color: rgba(74, 163, 90, 1);
 } */
- .auth-container .text-forget{
+ div .text-forget{
 color:  rgba(74, 163, 90, 1);
 }
-.auth-container .form-control{
+.auth .form-control{
     border-left: 0 transparent;
     background-color: var(--input-bg);
 }
-.auth-container .pass-input{
+.auth .pass-input{
     border-right: 0 transparent;
 }
-.auth-container .input-group-text{
+.auth  .input-group-text{
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: 2px solid gray;
@@ -46,7 +69,7 @@ color:  rgba(74, 163, 90, 1);
 
 
 }
-.auth-container .btn-outline-secondary{
+.auth .btn-outline-secondary{
     border-width: 1px 1px 1px 0;
     border-style: solid;
     border-color: #dee2e6;
@@ -122,6 +145,12 @@ color:  rgba(74, 163, 90, 1);
     font-size: 40px;
     font-weight: 700;
  }
+ @media  (max-width:768px) {
+    .header .title h3,
+    .header .title span{
+        font-size: 20px;
+    }
+ }
 .header .cicle1{
     left: 34px;
     width: 60px;
@@ -134,17 +163,13 @@ color:  rgba(74, 163, 90, 1);
     left: 52px;
  }
 
- .details h4{
-    font-family: "Poppins", serif;
-    font-weight: 500;
-    font-size: 20px;
-}
- .details p{
-    font-size: 14px;
-    color: rgba(50, 60, 71, 1);
-}
-.details .btn-add{
+
+.btn-add{
     background-color: var(--main-color) ;
+    border: none;
+    border-radius: 8px;
+    color: white;
+
     /* padding: 15px 56px; */
 }
 
@@ -160,10 +185,8 @@ color:  rgba(74, 163, 90, 1);
 
 }
 .table thead {
-    padding: 32px 40px;
     border-radius: 20px;
 }
-
 
 .table thead th:first-child {
     border-radius: 15px 0 0 15px;
@@ -187,15 +210,34 @@ tbody tr.table-row.odd-row {
 tbody tr.table-row.even-row{
     background-color: rgba(248, 249, 251, 1);
 }
-
-
-/* tbody tr.table-row td{
-    padding: 20px 40px;
-} */
 .recipe-img{
     width: 56px;
     height: 56px;
+    object-fit: cover;
 }
+@media (max-width:768px) {
+    /* .table thead{
+        font-size: 12px;
+    } */
+    .table {
+        font-size: 9px;
+    }
+    .table thead th{
+        padding: 8px;
+    }
+    .table>:not(caption)>*>* {
+        padding: 0.3rem .2rem;
+    }
+    .recipe-img{
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
+    }
+}
+
+
+
+
 /* dropdown -(delete/view/update) styling */
 .btn-dropdown{
     border: none;
@@ -204,7 +246,7 @@ tbody tr.table-row.even-row{
     border-radius: 20px;
     border: none;
     box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
-    /* transform: translate3d(0px, 38.4px, 0px) !important; */
+    --bs-dropdown-min-width: 126px !important;
 }
 .dropdown-menu::after {
     position: absolute;
@@ -220,26 +262,52 @@ tbody tr.table-row.even-row{
     color: var(--main-color);
     width: 13px;
 }
+.dropdown-item:active{
+    background-color: #f8f9fa;
+    color: #212529;
+}
 .dashboard-header{
+    border-radius: 15px;
     background-color: rgba(240, 255, 239, 1);
+    color:     rgba(31, 38, 62, 1)
+    ;
+}
+.dashboard-header h4{
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-size: 20px;
+}
+.dashboard-header sp{
+    font-size: 14px;
+  
 }
 
+.dashboard-header span{
+    color: var(--main-color);
+}
 /* modal styling  */
 
 .modal .modal-header{
     border-bottom: none;
 }
-.modal .close-circle{
+.modal-header{
+    justify-content: space-between;
+}
+.modal-header .close-modal {
 width: 32px;
 height: 32px;
 border-radius: 50%;
 border: 1px solid  var(--delete-color);
 cursor: pointer;
 
+
 }
 
-.modal .btn-closemodal{
+.modal-header .btn-closemodal{
 color: var(--delete-color);
+}
+.modal-body {
+    text-align: center;
 }
 .modal .modal-footer .delete-btn{
 border:1px solid var(--delete-color);
@@ -263,4 +331,71 @@ color: var(--delete-color);
 .loading{
     width: 4rem;
     height: 4rem;
+}
+.not-found{
+    background-image: url(../src/assets/images/notfound.svg);
+    /* background-size: 70%; */
+    background-repeat: no-repeat;
+background-position: 100%;
+   height: 100vh;
+   font-family: "Inter", sans-serif;
+
+}
+.not-found h3{
+    font-weight: 700;
+    font-size: 40px;
+}
+.not-found span{
+    color: var(--main-color);
+    font-size: 32px;
+
+}
+.not-found p{
+    line-height: 24px;
+  
+}
+.search-icon{
+   background-color: transparent;
+
+}
+
+.receipe-inputs .input-group,
+.recipes-data .input-group{
+    border: 1px solid #E0E2E7;
+    border-radius: 8px;
+    /* color: rgba(163, 169, 182, 1);; */
+}
+
+.receipe-inputs .input-group:focus-within,
+.recipes-data .input-group:focus-within,
+.recipes-data textarea:focus{
+    border-color: var(--main-color);
+}
+
+.receipe-inputs .form-control,
+.receipe-inputs .input-group-text,
+.receipe-inputs .form-control:focus,
+
+.recipes-data input.form-control,
+.recipes-data .input-group-text{
+border: none;
+}
+.recipes-data input,
+.recipes-data select.form-select,
+.recipes-data .form-control:focus,
+.recipes-data textarea  {
+    background-color: rgba(247, 247, 247, 1) !important;
+}
+.recipes-data .btns-recipes{
+width: fit-content;
+}
+.recipes-data .btn-cancel{
+    color: var(--main-color);
+    border: 1px solid var(--main-color);
+    border-radius: 8px;
+}
+@media (max-width:768px) {
+    input{
+        font-size: 12px
+    }
 }

@@ -28,3 +28,7 @@ export const passwordValidation={
       message:"Enter min 4 characters"
      }
    }
+export const addCategoryValidation={
+  required:"The name field is required.",
+
+  }

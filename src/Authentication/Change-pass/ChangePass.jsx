@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../Shared/Header/Header";
-import DashImgHeader from '../../assets/images/dashimg-header.png'
-import HeaderDetails from "../../Shared/HeaderDetails/HeaderDetails";
-import logo from '../../assets/images/logo-change.png'
 import { useForm } from "react-hook-form";
 import { passwordComfirmValidation, passwordValidation } from "../../services/validations";
-import { axiosPrivateInstance, Users_URLS } from "../../services/urls/urls";
 import { toast } from "react-toastify";
+import { Modal } from "react-bootstrap";
+import { axiosPrivateInstance } from "../../services/api/apiInstance";
+import { Users_URLS } from "../../services/api/apiConfig";
 
-export default function ChangePass() {
+import logo from '../../assets/images/logo-change.png'
+
+
+export default function ChangePass({show,handleClose,logOut}) {
 const [showOldPass,setShowPass]=useState(false)
 const [showNewPass,setShowNewPass]=useState(false)
 const [showComfirmNewPass,setshowComfirmNewPass]=useState(false)
@@ -22,6 +23,7 @@ async function onSubmit(values){
 try {
   const {data}=await axiosPrivateInstance.put(Users_URLS.CHANGE_PASSWORD,values)
   console.log(data)
+  logOut()
    toast.success(data?.message)
 } catch (error) {
   console.log(error)
@@ -37,25 +39,16 @@ try {
     trigger('confirmNewPassword')
   },[newpassword,comfirmPassword,trigger])
 
-  return <div div className="position-relative">
-  <Header 
-    title={'Welcome'} 
-    img={<img src={DashImgHeader} alt="dashboard header img" className="w-75"/>}
-    subtitle={'ebtehal!'}
-    description={'This is a welcoming screen for the entry of the application , you can now see the options'} />
-
-     <HeaderDetails title={'Fill the Recipes !'} 
+  return <>
+ 
+         <Modal show={show} onHide={handleClose}>
       
-        subtitle={'you can now fill the meals easily using the table and form , click here and sill it with the table !'}
-        to={'/dashboard/recipes'}
-        />
-
-        
-         <div className="row w-100 z-2 position-absolute translate-middle top-50 start-50 justify-content-center align-items-center ">
-                  <div className="col-md-5 bg-white rounded-3 px-5 py-3 ">
+      <Modal.Body>
+      <div className="row  z-2 auth w-100">
+                  <div className="col-md-5 bg-white rounded-3 px-5 py-3 w-100 ">
                     <div>
                       <div className="auth-logo text-center">
-                        <img src={logo} alt="logo"  className='logo'/>
+                        <img src={logo} alt="logo"  className='logo w-50'/>
                       </div>
                       </div>
                       <div className="title my-3">
@@ -140,6 +133,10 @@ try {
 
         </div>
       </div>
-  <div/>
-  </div>
+      </Modal.Body>
+     
+    </Modal>
+      
+  </>
+
 }
