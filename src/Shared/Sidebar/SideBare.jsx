@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import sideBarLogo from '../../assets/images/sidebar-logo.png'
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import {  NavLink, useLocation, useNavigate } from "react-router-dom";
+import {  NavLink,  useNavigate } from "react-router-dom";
 // import icons
 import userIcons  from '../../assets/images/people-icon.png'
 import homeIcon  from '../../assets/images/home-icon.png'
@@ -14,14 +14,12 @@ import { UseAuthContext } from "../../context/authContext";
 
 
 export default function SideBare() {
-  const location=useLocation()
-   const [show, setShow] = useState(false);
-     
-       const handleShow = () => setShow(true);
-       const handleClose = () => setShow(false);
 
   const navigate=useNavigate()
-   const [isCollapsed,setIsCollapsed]=useState(false)
+  const [show, setShow] = useState(false);   
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+  const [isCollapsed,setIsCollapsed]=useState(false)
 
   const toggleCollapse=()=>{ 
     if(window.innerWidth>=768){

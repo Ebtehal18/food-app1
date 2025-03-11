@@ -15,11 +15,10 @@ export default function UsersList() {
   const [users,setUsers]=useState([])
   const [selectedUser,setSelectedUser]=useState(null)
   const [isDeleting,setIsDeleting]=useState(false)
-  
+  const [isMobile,setIsMobile]=useState(false)
+
   const[show,setShow]=useState(false)
-  
   const handleCloseeModal = () => setShow(false);
-   
   const handleShowModal = (id) =>  {
     setSelectedUser(id)
     setShow(true)
@@ -58,6 +57,14 @@ export default function UsersList() {
   
   useEffect(()=>{
 getAllUsers()
+
+const handelIsMobile=()=>{
+  setIsMobile(window.innerWidth<=768)
+}
+window.addEventListener('resize',handelIsMobile)
+return ()=>{
+  window.removeEventListener('resize',handelIsMobile)
+}
   },[])
   return <>
   <Header 
@@ -87,7 +94,7 @@ getAllUsers()
    
       <th scope="col">Name</th>
       <th scope="col">Image</th>
-      <th scope="col">Email</th>
+   {!isMobile?   <th scope="col">Email</th>:null}
       <th scope="col">Phone	</th>
       <th scope="col">Actions</th>
     </tr>
@@ -97,7 +104,8 @@ getAllUsers()
 
       <td className="align-middle">{user.userName}</td>
       <td className="align-middle">{<img src={user.imagePath?`${imgURL}/${user.imagePath}`:noimg} alt={user.userName} className="recipe-img rounded-2" />}</td>
-      <td className="align-middle">{user.email}</td>
+
+      {!isMobile?<td className="align-middle">{user.email}</td>:null}
       <td className="align-middle">{user.phoneNumber}</td>
       <td className="align-middle">
       <div className="dropdown">
