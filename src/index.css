@@ -145,12 +145,7 @@ color:  rgba(74, 163, 90, 1);
     font-size: 40px;
     font-weight: 700;
  }
- @media  (max-width:768px) {
-    .header .title h3,
-    .header .title span{
-        font-size: 20px;
-    }
- }
+
 .header .cicle1{
     left: 34px;
     width: 60px;
@@ -214,25 +209,6 @@ tbody tr.table-row.even-row{
     width: 56px;
     height: 56px;
     object-fit: cover;
-}
-@media (max-width:768px) {
-    /* .table thead{
-        font-size: 12px;
-    } */
-    .table {
-        font-size: 9px;
-    }
-    .table thead th{
-        padding: 8px;
-    }
-    .table>:not(caption)>*>* {
-        padding: 0.3rem .2rem;
-    }
-    .recipe-img{
-        width: 30px;
-        height: 30px;
-        object-fit: cover;
-    }
 }
 
 
@@ -358,7 +334,12 @@ background-position: 100%;
    background-color: transparent;
 
 }
-
+.recipe-detail{
+    font-size: 15px;
+}
+.recipe-detail h5{
+    color: var(--main-color);
+}
 .receipe-inputs .input-group,
 .recipes-data .input-group{
     border: 1px solid #E0E2E7;
@@ -394,8 +375,49 @@ width: fit-content;
     border: 1px solid var(--main-color);
     border-radius: 8px;
 }
+.modal-content span{
+    justify-content: center;
+    height: 300px;
+    align-items: center;
+}
+.modal-detail  h6{
+    font-size: 15px;
+    color: var(--main-color);
+}
+.modal-detail h6 span{
+    font-weight: 400;
+    color: black;
+}
+.name-detail{
+    font-size: 17px;
+}
+.name-detail span{
+    color: var(--main-color);
+}
 @media (max-width:768px) {
     input{
         font-size: 12px
+    }
+    .dropdown-menu {
+        font-size: 13px;
+    }
+    .header .title h3,
+    .header .title span{
+        font-size: 20px;
+    }
+   
+    .table {
+        font-size: 9px;
+    }
+    .table thead th{
+        padding: 8px;
+    }
+    .table>:not(caption)>*>* {
+        padding: 0.3rem .2rem;
+    }
+    .recipe-img{
+        width: 30px;
+        height: 30px;
+        object-fit: cover;
     }
 }

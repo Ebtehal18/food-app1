@@ -9,6 +9,9 @@ import Loading from "../../Shared/Loading/Loading";
 import noimg from '../../assets/images/no-user.jpg'
 import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmation";
 import { toast } from "react-toastify";
+import { Modal } from "react-bootstrap";
+import { BeatLoader } from "react-spinners";
+import { formatDate } from "../../helpers/helpers";
 
 export default function UsersList() {
   const [loading,setLoading]=useState(true)
@@ -16,6 +19,8 @@ export default function UsersList() {
   const [selectedUser,setSelectedUser]=useState(null)
   const [isDeleting,setIsDeleting]=useState(false)
   const [isMobile,setIsMobile]=useState(false)
+  const [loadingUser, setLoadingUser] = useState(false);
+   const [user,setUser]=useState(null)
 
   const[show,setShow]=useState(false)
   const handleCloseeModal = () => setShow(false);
@@ -25,6 +30,15 @@ export default function UsersList() {
   }
   
    
+
+   const [showUser, setShowUder] = useState(false);
+  
+    const handleCloseUser = () => setShowUder(false);
+    const handleShowUser = (id) => {
+    setShowUder(true)
+    getUser(id)
+    }
+  // get all users
   const getAllUsers=async()=>{
     setLoading(true)
     try {
@@ -55,8 +69,23 @@ export default function UsersList() {
      }
      }
   
+// get user detail
+  const getUser=async(id)=>{
+     setLoadingUser(true)
+    try {
+      const {data}=await axiosPrivateInstance.get(Users_URLS.GET_USER(id))
+      console.log(data)
+      setUser(data)
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoadingUser(false)
+    }
+   }
+
+
   useEffect(()=>{
-getAllUsers()
+  getAllUsers()
 
 const handelIsMobile=()=>{
   setIsMobile(window.innerWidth<=768)
@@ -113,7 +142,7 @@ return ()=>{
   <i className="fa-solid fa-ellipsis"></i>
   </button>
   <ul className="dropdown-menu">
-    <li><button className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
+    <li><button onClick={()=>handleShowUser(user?.id)} className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
     <li><button className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</button></li>
     <li><button onClick={()=>handleShowModal(user?.id)} className="dropdown-item" type="button" > <i className="fa-solid fa-trash me-3"></i>Delete</button></li>
 
@@ -129,6 +158,33 @@ return ()=>{
 </table>}
   </div> 
   <DeleteComfirmation show={show} handleClose={handleCloseeModal} deleteFunction={deleteUser} isDeleting={isDeleting} deleteItem={'User'}/>
-  
+  {/* show user detail */}
+  <Modal centered show={showUser} onHide={handleCloseUser}>
+
+       {loadingUser?  <BeatLoader color="rgba(0, 146, 71, 1)" size={20} />:<>
+        <Modal.Header closeButton={false}>
+          <Modal.Title><p className="name-detail"><span><i class="fa-solid fa-circle-user me-1"></i>Name:</span> {user?.userName}</p></Modal.Title>
+          <div className="close-modal d-flex justify-content-center align-items-center" onClick={handleCloseUser}>
+        <i className="fa-solid fa-xmark btn-closemodal" ></i>
+        </div>
+        </Modal.Header>
+        <Modal.Body>
+           <img loading="lazy" src={user?.imagePath?`${imgURL}/${user.imagePath}`:noimg} alt={user?.name} className="w-50"  />
+      
+           <div className="text-start mt-3 modal-detail px-3">
+  <h6><i className="fa-solid fa-envelope me-1"></i> Email: <span>{user?.email}</span></h6>
+  <h6><i className="fa-solid fa-phone me-1"></i> Phone Number: <span>{user?.phoneNumber}</span></h6>
+  <h6><i className="fa-solid fa-globe me-1"></i> Country: <span>{user?.country}</span></h6>
+  <h6><i className="fa-solid fa-user-tag me-1"></i> User Type: <span>{user?.group?.name}</span></h6>
+  <h6><i className="fa-solid fa-calendar-alt me-1"></i> Creation Date: <span>{formatDate(user?.creationDate)}</span></h6>
+</div>
+        </Modal.Body>
+       
+       </>}
+       <Modal.Footer>
+        <button type="button" 
+        onClick={handleCloseUser} className="btn delete-btn "  >Close</button>
+        </Modal.Footer>
+      </Modal>
   </>;
 }

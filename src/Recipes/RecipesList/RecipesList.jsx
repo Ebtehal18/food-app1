@@ -10,13 +10,17 @@ import Nodata from "../../Shared/Nodata/Nodata";
 import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmation";
 import Loading from "../../Shared/Loading/Loading";
 import noimg from '../../assets/images/no-plate2.jpg';
+import { Modal } from "react-bootstrap";
+import { BeatLoader } from "react-spinners";
 
 
 export default function RecipesList() {
   const [recipes,setRecipes]=useState([])
   const [selectedId,setSelectedId]=useState(null)
   const [loading, setLoading] = useState(true);
+  const [loadingRecipe, setLoadingRecipe] = useState(false);
   const [isDeleting,setIsDeleting]=useState(false)
+  const [recipe,setRecipe]=useState(null)
 
   const [show, setShow] = useState(false);
 
@@ -27,6 +31,15 @@ export default function RecipesList() {
 
   const handleClose = () => setShow(false);
 
+  const [showRecipe, setShowRecipe] = useState(false);
+
+  const handleCloseRecipe = () => setShowRecipe(false);
+  const handleShowRecipe = (id) => {
+    setShowRecipe(true)
+    getRecipe(id)
+  }
+
+// get all recipe
   const getAllRecipes=async()=>{
     setLoading(true)
 
@@ -39,7 +52,7 @@ export default function RecipesList() {
     setLoading(false);
   }
   }
-
+// delete recipe
   const deleteRecipy=async()=>{
    setIsDeleting(true)
      try {
@@ -56,8 +69,20 @@ export default function RecipesList() {
       setIsDeleting(false)
      }
      }
+// get single recipe detail
+   const getRecipe=async(id)=>{
+     setLoadingRecipe(true)
+    try {
+      const {data}=await axiosPrivateInstance.get(Recipes_URLS.GET_RECIPE(id))
+      console.log(data)
+      setRecipe(data)
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoadingRecipe(false)
+    }
+   }
 
-   
     useEffect(()=>{
       getAllRecipes()
     },[])
@@ -98,7 +123,7 @@ export default function RecipesList() {
 
     </div>
 <div className="col-md-3">
-<select class="form-select" aria-label="Default select example">
+<select class="form-select mb-3" aria-label="Default select example">
   <option selected>Tag</option>
   <option value="1">One</option>
   <option value="2">Two</option>
@@ -106,7 +131,7 @@ export default function RecipesList() {
 </select>
 </div>
 <div className="col-md-3">
-<select class="form-select" aria-label="Default select example">
+<select class="form-select mb-3" aria-label="Default select example">
   <option selected>Category</option>
   <option value="1">One</option>
   <option value="2">Two</option>
@@ -146,7 +171,7 @@ export default function RecipesList() {
   <i className="fa-solid fa-ellipsis"></i>
   </button>
   <ul className="dropdown-menu">
-    <li><button className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
+    <li><button onClick={()=>handleShowRecipe(recipe?.id)} className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
     <li><button className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</button></li>
     <li><button onClick={()=>handleShow(recipe.id)} className="dropdown-item" type="button"  > <i className="fa-solid fa-trash me-3"></i>Delete</button></li>
   </ul>
@@ -161,5 +186,35 @@ export default function RecipesList() {
 </table>}
   </div>
   <DeleteComfirmation deleteFunction={deleteRecipy} show={show} handleClose={handleClose} isDeleting={isDeleting} deleteItem={'Recipe'}  />
+
+
+
+{/* show recipe detail */}
+  <Modal centered show={showRecipe} onHide={handleCloseRecipe}>
+
+       {loadingRecipe?  <BeatLoader color="rgba(0, 146, 71, 1)" size={20} />:<>
+        <Modal.Header closeButton={false}>
+          <Modal.Title>{recipe?.name}</Modal.Title>
+          <div className="close-modal d-flex justify-content-center align-items-center" onClick={handleCloseRecipe}>
+        <i className="fa-solid fa-xmark btn-closemodal" ></i>
+        </div>
+        </Modal.Header>
+        <Modal.Body>
+           <img loading="lazy" src={recipe?.imagePath?`${imgURL}/${recipe.imagePath}`:noimg} alt={recipe?.name} className="w-75"  />
+      
+        <div className="text-start mt-3 modal-detail px-3">
+          <h6 ><i class="fa-solid fa-file-lines me-1"></i> Description: <span>{recipe?.description}</span></h6>
+         {recipe?.category.length>0? <h6><i class="fa-regular fa-calendar-days me-1"></i>Category: <span>{recipe?.category[0].name}</span></h6>:null}
+          <h6> <i class="fa-solid fa-tag me-1"></i>Tag: <span>{recipe?.tag['name']}</span></h6>
+          <h6> <i class="fa-solid fa-money-bills me-1"></i>Price: <span>{recipe?.price} EGP</span></h6>
+        </div>
+        </Modal.Body>
+       
+       </>}
+       <Modal.Footer>
+        <button type="button" 
+        onClick={handleCloseRecipe} className="btn delete-btn "  >Close</button>
+        </Modal.Footer>
+      </Modal>
   </>
 }
