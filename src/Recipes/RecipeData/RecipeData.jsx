@@ -229,8 +229,8 @@ try {
   acceptedFiles={["image/*"]}
   dropzoneText="Drag & Drop or Choose an Item Image to Upload"
   onChange={handelImage}
-      filesLimit={1}
-      initialFiles={fileObjects.map((file) => URL.createObjectURL(file))}
+  filesLimit={1}
+  initialFiles={fileObjects.map((file) => URL.createObjectURL(file))}
       />
    
 </div>

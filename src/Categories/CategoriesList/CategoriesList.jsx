@@ -94,7 +94,7 @@ export default function CategoriesList() {
    
 
    const getSearch=(e)=>{
-    getAllCategories(e.target.value,5,1)
+    getAllCategories(5,1,e.target.value)
     }
 
 

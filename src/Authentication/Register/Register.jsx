@@ -3,7 +3,12 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 export default function Register() {
-  const {register,handleSubmit,formState:{errors},}=useForm()
+  const {register,handleSubmit,formState:{errors},}=useForm();
+
+  const onSubmit=async(values)=>{
+
+
+  }
   return   <>
                  <div className="title my-3">
                   <h3 className="h5">Register</h3>
@@ -22,7 +27,7 @@ export default function Register() {
               </span>
              </div>
              <input 
-            
+            {...register('userName')}
               type="text" className="form-control" placeholder="UserName" aria-label="usrname" aria-describedby="basic-addon1"/>
               </div>
               {/* {errors.email && <div className=" mb-3 alert-danger alert">{errors.email.message}</div>} */}
@@ -35,7 +40,7 @@ export default function Register() {
               </span>
              </div>
              <input 
-            
+            {...register('')}
               type="text" className="form-control" placeholder="Country" aria-label="Country" aria-describedby="basic-addon1"/>
               </div>
               {/* {errors.email && <div className=" mb-3 alert-danger alert">{errors.email.message}</div>} */}
@@ -49,7 +54,7 @@ export default function Register() {
               </span>
              </div>
              <input 
-           
+           {...register('')}
             className="form-control pass-input" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1"/>
             <span className="btn btn-outline-secondary  border-start-0 border-secoundry-subtle" type='button'
             // onClick={()=>setShowPassword(!showPassword)}
@@ -73,7 +78,7 @@ export default function Register() {
               </span>
              </div>
              <input 
-            
+            {...register('email')}
               type="email" className="form-control" placeholder="Enter your E-mail" aria-label="Email" aria-describedby="basic-addon1"/>
               </div>
               {/* {errors.email && <div className=" mb-3 alert-danger alert">{errors.email.message}</div>} */}
@@ -86,7 +91,7 @@ export default function Register() {
               </span>
              </div>
              <input 
-            
+            {...register('')}
               type="number" className="form-control" placeholder="PhoneNumber" aria-label="PhoneNumber" aria-describedby="basic-addon1"/>
               </div>
               {/* {errors.email && <div className=" mb-3 alert-danger alert">{errors.email.message}</div>} */}
@@ -99,7 +104,7 @@ export default function Register() {
               </span>
              </div>
              <input 
-           
+           {...register('')}
             className="form-control pass-input" placeholder="confirm-password" aria-label="confirm-password" aria-describedby="basic-addon1"/>
             <span className="btn btn-outline-secondary  border-start-0 border-secoundry-subtle" type='button'
             // onClick={()=>setShowPassword(!showPassword)}
