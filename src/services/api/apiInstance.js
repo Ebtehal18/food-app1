@@ -10,9 +10,13 @@ export const axiosPublicInstance = axios.create({
   
 })
 // any requeset will have that headers
+// The word "Bearer" is a keyword in authentication schemes.
+// It tells the server that the token is a Bearer Token (used for authorization).
+// Bearer ${token} is necessary because it follows authentication standards.
+
 export const axiosPrivateInstance=axios.create({
     baseURL,
     headers:{
-        Authorization:localStorage.getItem('token')
+        Authorization: `Bearer ${localStorage.getItem('token')}`  
     }
 })

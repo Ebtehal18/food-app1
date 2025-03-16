@@ -26,7 +26,7 @@ export default function Navbar() {
    
       </li>
       <li className="nav-item d-flex mt-2 mt-md-0 d-flex align-items-center mx-4">
-     <i class="fa-solid fa-bell" ></i>
+     <i className="fa-solid fa-bell" ></i>
    
       </li>
     </ul>

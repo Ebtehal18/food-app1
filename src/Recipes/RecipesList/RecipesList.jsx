@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Recipes_URLS } from "../../services/api/apiConfig";
+import { Categories_URLS, Recipes_URLS, Tag_URl } from "../../services/api/apiConfig";
 import { axiosPrivateInstance, imgURL } from "../../services/api/apiInstance";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Header from "../../Shared/Header/Header";
 import receipeImgHeader from '../../assets/images/categoryimg-header.svg'
@@ -12,6 +12,7 @@ import Loading from "../../Shared/Loading/Loading";
 import noimg from '../../assets/images/no-plate2.jpg';
 import { Modal } from "react-bootstrap";
 import { BeatLoader } from "react-spinners";
+import Pagination from "../../Shared/Pagination/Pagination";
 
 
 export default function RecipesList() {
@@ -22,17 +23,26 @@ export default function RecipesList() {
   const [isDeleting,setIsDeleting]=useState(false)
   const [recipe,setRecipe]=useState(null)
 
-  const [show, setShow] = useState(false);
+  const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
+  const [activePage,setActivePage]=useState(1)
+  
+  const [tags,setTags]=useState([])
+  const [categories,setCategories]=useState([])
 
+  const [searchName,setSearchName]=useState('')
+  const [selectTag,setSelectTag]=useState('')
+  const [selectCategory,setSelectCategory]=useState('')
+  const navigate=useNavigate()
+
+
+  const [show, setShow] = useState(false);
   const handleShow = (id) => {
     setSelectedId(id)
     setShow(true)
   }
-
   const handleClose = () => setShow(false);
 
   const [showRecipe, setShowRecipe] = useState(false);
-
   const handleCloseRecipe = () => setShowRecipe(false);
   const handleShowRecipe = (id) => {
     setShowRecipe(true)
@@ -40,12 +50,22 @@ export default function RecipesList() {
   }
 
 // get all recipe
-  const getAllRecipes=async()=>{
+  const getAllRecipes=async(pageSize,pageNumber,name,tagId,categoryId)=>{
     setLoading(true)
 
   try {
-    const {data}= await axiosPrivateInstance.get(Recipes_URLS.GET_RECIPIES(10,1))
+    const {data}= await axiosPrivateInstance.get(Recipes_URLS.GET_RECIPIES,{
+      params:{
+        name,
+        tagId,
+        categoryId,
+        pageSize,
+        pageNumber
+      }
+    })
     setRecipes(data?.data)
+    setTotalNumberOfPages(Array.from({length:data?.totalNumberOfPages},(_,index)=>index+1))
+
   } catch (error) {
     console.log(error)
   }finally {
@@ -82,9 +102,53 @@ export default function RecipesList() {
       setLoadingRecipe(false)
     }
    }
+// get all tags
+const getTags=async()=>{
+  try {
+    const {data}=await axiosPrivateInstance.get(Tag_URl.GET_TAGS)
+    console.log(data)
+    setTags(data)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
-    useEffect(()=>{
-      getAllRecipes()
+// get all categories
+    const getAllCategories=async(pageSize,pageNumber)=>{
+      setLoading(true)
+      try {
+       const {data}=await axiosPrivateInstance.get(Categories_URLS.GET_CATEGORIES,{
+        params:{
+          pageSize,
+          pageNumber
+        }
+       })
+       console.log(data)
+       setCategories(data?.data)
+      } catch (error) {
+        console.log(error)
+      }
+     }
+  
+// search input
+const getSearch=(e)=>{
+setSearchName(e.target.value)
+getAllRecipes(5,1,e.target.value,selectTag,selectCategory)
+}
+const getSelectTag=(e)=>{
+setSelectTag(e.target.value)
+getAllRecipes(5,1,searchName,e.target.value,selectCategory)
+}
+const getSelectCategory=(e)=>{
+  setSelectCategory(e.target.value)
+getAllRecipes(5,1,searchName,selectTag,e.target.value)
+}
+
+
+   useEffect(()=>{
+      getAllRecipes(5,1)
+      getTags()
+      getAllCategories(100000,1)
     },[])
 
     return <>
@@ -105,7 +169,7 @@ export default function RecipesList() {
     </div>
 
 
-    <Link to={'/dashboard/recipes-data'} className={" btn-add px-3 py-2 text-decoration-none  px-md-5 py-md-3  text-white fw-bold"}>
+    <Link to={'/dashboard/recipes/new-recipe'} className={" btn-add px-3 py-2 text-decoration-none  px-md-5 py-md-3  text-white fw-bold"}>
       Add New Item
   </Link>
     </div>
@@ -115,27 +179,24 @@ export default function RecipesList() {
 <div className="container px-md-4 px-2  receipe-inputs">
   <div className="row">
     <div className="col-md-6">
-<div class="input-group mb-3">
-  <span class="input-group-text search-icon" id="basic-addon1">  <i className="fa-solid fa-magnifying-glass"></i></span>
-  <input type="text" class="form-control border-start-0" placeholder="Search here ..." aria-label="Search" aria-describedby="basic-addon1"/>
+<div className="input-group mb-3">
+  <span className="input-group-text search-icon" id="basic-addon1">  <i className="fa-solid fa-magnifying-glass"></i></span>
+  <input onChange={getSearch} type="text" className="form-control border-start-0" placeholder="Search here ..." aria-label="Search" aria-describedby="basic-addon1"/>
 </div>
   
 
     </div>
 <div className="col-md-3">
-<select class="form-select mb-3" aria-label="Default select example">
+<select className="form-select mb-3" aria-label="Default select example"onChange={getSelectTag}>
   <option selected>Tag</option>
-  <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
+{tags.map(tag=>  <option value={tag.id} key={tag.id}>{tag.name}</option>)}
 </select>
 </div>
 <div className="col-md-3">
-<select class="form-select mb-3" aria-label="Default select example">
+<select className="form-select mb-3" aria-label="Default select example"onChange={getSelectCategory}>
   <option selected>Category</option>
   <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
+ {categories.map(category=>  <option value={category.id} key={category.id}>{category.name}</option>)}
 </select>
 </div>
   </div>
@@ -147,7 +208,8 @@ export default function RecipesList() {
 
 
 <div className="px-md-4 px-2 text-center  ">
-{loading?<Loading/>:  <table className="table table-striped mt-3 ">
+{loading?<Loading/>:  <>
+  <table className="table table-striped mt-3 ">
   <thead>
     <tr>
    
@@ -155,6 +217,8 @@ export default function RecipesList() {
       <th scope="col">Image</th>
       <th scope="col">Price</th>
       <th scope="col">Description</th>
+      <th scope="col">tag</th>
+      <th scope="col">Category</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -165,6 +229,8 @@ export default function RecipesList() {
       <td className="align-middle">{<img loading="lazy" src={recipe.imagePath?`${imgURL}/${recipe.imagePath}`:noimg} alt={recipe.name} className="recipe-img rounded-2" />}</td>
       <td className="align-middle">{recipe.price} EGP</td>
       <td className="align-middle">{recipe.description}</td>
+      <td className="align-middle">{recipe.tag.name}</td>
+      <td className="align-middle">{recipe?.category[0]?.name}</td>
       <td className="align-middle">
       <div className="dropdown">
   <button className="btn btn-dropdown " type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -172,18 +238,22 @@ export default function RecipesList() {
   </button>
   <ul className="dropdown-menu">
     <li><button onClick={()=>handleShowRecipe(recipe?.id)} className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
-    <li><button className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</button></li>
+    <li><Link to={`/dashboard/recipes/${recipe.id}`} className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</Link></li>
     <li><button onClick={()=>handleShow(recipe.id)} className="dropdown-item" type="button"  > <i className="fa-solid fa-trash me-3"></i>Delete</button></li>
   </ul>
 </div>
     
       </td>
-    </tr>):<td colSpan="5" className="text-center">
+    </tr>):<td colSpan="7" className="text-center">
       <Nodata />
     </td>}
   
   </tbody>
-</table>}
+</table>
+  <Pagination totalNumberOfPages={totalNumberOfPages} getFun={getAllRecipes} activePage={activePage} setActivePage={setActivePage} /> 
+</>
+
+}
   </div>
   <DeleteComfirmation deleteFunction={deleteRecipy} show={show} handleClose={handleClose} isDeleting={isDeleting} deleteItem={'Recipe'}  />
 
@@ -192,7 +262,7 @@ export default function RecipesList() {
 {/* show recipe detail */}
   <Modal centered show={showRecipe} onHide={handleCloseRecipe}>
 
-       {loadingRecipe?  <BeatLoader color="rgba(0, 146, 71, 1)" size={20} />:<>
+       {loadingRecipe? <div className="load-detail">  <BeatLoader color="rgba(0, 146, 71, 1)" size={20} /></div>:<>
         <Modal.Header closeButton={false}>
           <Modal.Title>{recipe?.name}</Modal.Title>
           <div className="close-modal d-flex justify-content-center align-items-center" onClick={handleCloseRecipe}>
@@ -203,10 +273,10 @@ export default function RecipesList() {
            <img loading="lazy" src={recipe?.imagePath?`${imgURL}/${recipe.imagePath}`:noimg} alt={recipe?.name} className="w-75"  />
       
         <div className="text-start mt-3 modal-detail px-3">
-          <h6 ><i class="fa-solid fa-file-lines me-1"></i> Description: <span>{recipe?.description}</span></h6>
-         {recipe?.category.length>0? <h6><i class="fa-regular fa-calendar-days me-1"></i>Category: <span>{recipe?.category[0].name}</span></h6>:null}
-          <h6> <i class="fa-solid fa-tag me-1"></i>Tag: <span>{recipe?.tag['name']}</span></h6>
-          <h6> <i class="fa-solid fa-money-bills me-1"></i>Price: <span>{recipe?.price} EGP</span></h6>
+          <h6 ><i className="fa-solid fa-file-lines me-1"></i> Description: <span>{recipe?.description}</span></h6>
+         {recipe?.category? <h6><i className="fa-regular fa-calendar-days me-1"></i>Category: <span>{recipe?.category[0].name}</span></h6>:<span className="text-danger">none</span>}
+          <h6> <i className="fa-solid fa-tag me-1"></i>Tag: <span>{recipe?.tag['name']}</span></h6>
+          <h6> <i className="fa-solid fa-money-bills me-1"></i>Price: <span>{recipe?.price} EGP</span></h6>
         </div>
         </Modal.Body>
        

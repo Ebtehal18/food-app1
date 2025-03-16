@@ -6,7 +6,7 @@ export const Users_URLS={
     DELETE_USER:(id)=>`/Users/${id}`,
     GET_USER:(id)=>`/Users/${id}`,
     VERIFY_USER:`/Users/verify`,
-    GET_USERS:(pageSize=10,pageNumber=1)=>`/Users/?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+    GET_USERS:`/Users/`,
     GET_CURRENT_USER:'/Users/currentUser',
     UPDATE_CURRENT_PROFILE:'/Users',
     CHANGE_PASSWORD:`/Users/ChangePassword`,
@@ -17,7 +17,7 @@ export const Users_URLS={
     // recipes utls
     export const Recipes_URLS={
     CREATE_RECIPE:`/Recipe`,
-    GET_RECIPIES:(pageSize = 10, pageNumber = 1)=>`/Recipe/?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+    GET_RECIPIES:`/Recipe`,
     GET_RECIPE:(id)=>`/Recipe/${id}`,
     DELETE_RECIPE:(id)=>`/Recipe/${id}`,
     UPDATE_RECIPE:(id)=>`/Recipe/${id}`
@@ -25,7 +25,7 @@ export const Users_URLS={
     // categories urls
     export const Categories_URLS={
     CREATE_CATEGORY:`/Category`,
-    GET_CATEGORIES:(pageSize = 10, pageNumber = 1)=>`/Category/?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+    GET_CATEGORIES:`/Category`,
     GET_CATEGORY:(id)=>`/Category/${id}`,
     DELETE_CATEGORY:(id)=>`/Category/${id}`,
     UPDATE_CATEGORY:(id)=>`/Category/${id}`

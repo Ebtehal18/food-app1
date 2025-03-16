@@ -13,7 +13,7 @@ export default function VerifyAccount() {
             <div className="input-group mb-3">
              <div className="input-group-prepend">
               <span className="input-group-text h-100" id="basic-addon1">
-              <i class="fa-solid fa-mobile-screen"></i>
+              <i className="fa-solid fa-mobile-screen"></i>
             </span>
            </div>
            <input 

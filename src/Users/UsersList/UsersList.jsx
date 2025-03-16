@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { Modal } from "react-bootstrap";
 import { BeatLoader } from "react-spinners";
 import { formatDate } from "../../helpers/helpers";
+import Pagination from "../../Shared/Pagination/Pagination";
 
 export default function UsersList() {
   const [loading,setLoading]=useState(true)
@@ -20,7 +21,16 @@ export default function UsersList() {
   const [isDeleting,setIsDeleting]=useState(false)
   const [isMobile,setIsMobile]=useState(false)
   const [loadingUser, setLoadingUser] = useState(false);
-   const [user,setUser]=useState(null)
+  const [user,setUser]=useState(null)
+
+  const [userName,setUserName]=useState('')
+  const [userEmail,setUserEmail]=useState('')
+  const [userCountry,setUserCountry]=useState('')
+  const [userRole,setUserRole]=useState('')
+
+    const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
+    const [activePage,setActivePage]=useState(1)
+
 
   const[show,setShow]=useState(false)
   const handleCloseeModal = () => setShow(false);
@@ -39,12 +49,23 @@ export default function UsersList() {
     getUser(id)
     }
   // get all users
-  const getAllUsers=async()=>{
+  const getAllUsers=async(pageSize,pageNumber,userName,email,country,groups,)=>{
     setLoading(true)
     try {
-      const {data}=await axiosPrivateInstance(Users_URLS.GET_USERS(10,1))
+      const {data}=await axiosPrivateInstance(Users_URLS.GET_USERS,{
+        params:{
+          userName,
+          email,
+          country,
+          groups,
+         pageSize,
+         pageNumber
+        }
+      })
       // console.log(data.data)
       setUsers(data?.data)
+      setTotalNumberOfPages(Array.from({length:data?.totalNumberOfPages},(_,index)=>index+1))
+
     } catch (error) {
       console.log(error)
     }finally {
@@ -82,14 +103,32 @@ export default function UsersList() {
       setLoadingUser(false)
     }
    }
+// filteration==================================
+const getUserVal=(e)=>{
+  setUserName(e.target.value)
+getAllUsers(15,1,e.target.value,userEmail,userCountry,userRole)
+}
+const getUserEmail=(e)=>{
+  setUserEmail(e.target.value)
+getAllUsers(15,1,userName,e.target.value,userCountry,userRole)
+}
+const getUserCountry=(e)=>{
+  setUserCountry(e.target.value)
+getAllUsers(15,1,userName,userEmail,e.target.value,userRole)
+}
+const getUserRole=(e)=>{
+  setUserRole(e.target.value)
+getAllUsers(15,1,userName,userEmail,userCountry,e.target.value)
+}
 
 
   useEffect(()=>{
-  getAllUsers()
+  getAllUsers(15,1)
 
 const handelIsMobile=()=>{
   setIsMobile(window.innerWidth<=768)
 }
+handelIsMobile()
 window.addEventListener('resize',handelIsMobile)
 return ()=>{
   window.removeEventListener('resize',handelIsMobile)
@@ -115,9 +154,41 @@ return ()=>{
   </div>
 
 
+  <div className="container px-md-4 px-2  receipe-inputs">
+  <div className="row">
+    <div className="col-md-3">
+<div className="input-group mb-3">
+  <span className="input-group-text search-icon" id="basic-addon1">  <i className="fa-solid fa-magnifying-glass"></i></span>
+  <input onChange={getUserVal}  type="text" className="form-control border-start-0" placeholder="Search By Name ..." aria-label="Search" aria-describedby="basic-addon1"/>
+</div>
+    </div>
 
+<div className="col-md-3">
+<div className="input-group mb-3">
+  <span className="input-group-text search-icon" id="basic-addon1">  <i className="fa-regular fa-envelope"></i></span>
+  <input onChange={getUserEmail}  type="text" className="form-control border-start-0" placeholder="Search By Email ..." aria-label="Search" aria-describedby="basic-addon1"/>
+</div>
+</div>
+
+<div className="col-md-3">
+<div className="input-group mb-3">
+  <span className="input-group-text search-icon" id="basic-addon1">  <i className="fa-solid fa-globe"></i></span>
+  <input onChange={getUserCountry} type="text" className="form-control border-start-0" placeholder="Search By Country ..." aria-label="Search" aria-describedby="basic-addon1"/>
+</div>
+</div>
+
+<div className="col-md-3">
+<select onChange={getUserRole} className="form-select mb-3" aria-label="Default select example">
+  <option value={''} selected>Role</option>
+  <option value={1}>Admin</option>
+  <option value={2}>User</option>
+</select>
+</div>
+  </div>
+</div>
  <div className="px-md-4 px-2 text-center  ">
-{loading?<Loading/>:  <table className="table table-striped mt-3 ">
+{loading?<Loading/>:  <>
+  <table className="table table-striped mt-3 ">
   <thead>
     <tr>
    
@@ -155,15 +226,18 @@ return ()=>{
     </td>}
   
   </tbody>
-</table>}
+</table>
+<Pagination totalNumberOfPages={totalNumberOfPages}  getFun={getAllUsers} activePage={activePage} setActivePage={setActivePage} isUsers={true} />
+</>}
   </div> 
+
   <DeleteComfirmation show={show} handleClose={handleCloseeModal} deleteFunction={deleteUser} isDeleting={isDeleting} deleteItem={'User'}/>
   {/* show user detail */}
   <Modal centered show={showUser} onHide={handleCloseUser}>
 
-       {loadingUser?  <BeatLoader color="rgba(0, 146, 71, 1)" size={20} />:<>
+       {loadingUser?  <div className="load-detail">  <BeatLoader color="rgba(0, 146, 71, 1)" size={20} /></div>:<>
         <Modal.Header closeButton={false}>
-          <Modal.Title><p className="name-detail"><span><i class="fa-solid fa-circle-user me-1"></i>Name:</span> {user?.userName}</p></Modal.Title>
+          <Modal.Title><p className="name-detail"><span><i className="fa-solid fa-circle-user me-1"></i>Name:</span> {user?.userName}</p></Modal.Title>
           <div className="close-modal d-flex justify-content-center align-items-center" onClick={handleCloseUser}>
         <i className="fa-solid fa-xmark btn-closemodal" ></i>
         </div>

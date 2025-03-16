@@ -53,7 +53,8 @@ children:[
   // home
   {index:true,element:<Dashboard />},
   {path:"recipes",element:<RecipesList/>},
-  {path:"recipes-data",element:<RecipeData/>},
+  {path:"recipes/new-recipe",element:<RecipeData/>},
+  {path:"recipes/:recipeId",element:<RecipeData/>},
   {path:"category",element:<CategoriesList/>},
   {path:"categories-data",element:<CategoryData/>},
   {path:"users",element:<UsersList/>},

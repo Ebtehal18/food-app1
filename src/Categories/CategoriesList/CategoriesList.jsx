@@ -14,10 +14,11 @@ import Header from "../../Shared/Header/Header";
 import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmation";
 import Loading from "../../Shared/Loading/Loading";
 import CategoryData from "../CategoryData/CategoryData";
+import Pagination from "../../Shared/Pagination/Pagination";
 
 
 export default function CategoriesList() {
-  //  const {setValue}=useForm()
+
 
    const [categories,setCategories]=useState([])
    const [selectedId,setSelectedId]=useState(null)
@@ -28,13 +29,23 @@ export default function CategoriesList() {
 
    const [showAddEditCategoryModal, setshowAddEditCategoryModal] = useState(false);
    const [selectedCategory,setSelectedCategory]=useState(null)
-  
+
+   const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
+    const [activePage,setActivePage]=useState(1)
+
     //  get all category fun api
-    const getAllCategories=async()=>{
+    const getAllCategories=async(pageSize,pageNumber,name)=>{
       setLoading(true)
       try {
-       const {data}=await axiosPrivateInstance.get(Categories_URLS.GET_CATEGORIES(10,1))
-       console.log(data.data)
+       const {data}=await axiosPrivateInstance.get(Categories_URLS.GET_CATEGORIES,{
+        params:{
+          name,
+          pageSize,
+          pageNumber
+        }
+       })
+       console.log(data)
+       setTotalNumberOfPages(Array.from({length:data?.totalNumberOfPages},(_,index)=>index+1))
        setCategories(data?.data)
       } catch (error) {
         console.log(error)
@@ -62,7 +73,7 @@ export default function CategoriesList() {
   
   
   useEffect(()=>{
-    getAllCategories()
+    getAllCategories(5,1)
   },[])
 
   // delete modalll
@@ -82,41 +93,10 @@ export default function CategoriesList() {
    const handleCloseCategoryModal = () => setshowAddEditCategoryModal(false)
    
 
-// edit category=============================
-   const editCategory=async(value)=>{
-    console.log(value)
-    try {
-      const {data}=await axiosPrivateInstance.put(Categories_URLS.UPDATE_CATEGORY(selectedCategory?.id),value)
-      console.log(data)
-      handleCloseCategoryModal()
-      getAllCategories()
-      toast.success('Category Edited successfully')
-    } catch (error) {
-      console.log(error)
-      toast.error('Failed to Edit category. Please try again.')
+   const getSearch=(e)=>{
+    getAllCategories(e.target.value,5,1)
     }
-   }
-    // add category
-   const submitCategory=async(value)=>{
-    console.log(value)
-    try {
-      const {data}=await axiosPrivateInstance.post(Categories_URLS.CREATE_CATEGORY,value)
-      handleCloseCategoryModal()
-      getAllCategories()
-      toast.success('Category created successfully')
-      
-      // console.log(data)
-    } catch (error) {
-      console.log(error)
-      toast.error('Failed to create category. Please try again.')
-    }
-   }
 
-
-
-
-
- 
 
 
   return <>
@@ -141,9 +121,16 @@ export default function CategoriesList() {
   </div>
 
 
+ <div className="px-md-4 px-2">
+ <div className="input-group mb-3 ">
+  <span className="input-group-text search-icon" id="basic-addon1">  <i className="fa-solid fa-magnifying-glass"></i></span>
+  <input onChange={getSearch}  type="text" className="form-control border-start-0" placeholder="Search here ..." aria-label="Search" aria-describedby="basic-addon1"/>
+</div>
+
+ </div>
   <div className="px-md-4 text-center px-2 ">
-    {loading?<Loading/>:
-     <table className="table table-striped mt-3 ">
+    {loading?<Loading/>:<>
+      <table className="table table-striped mt-3 ">
   <thead>
     <tr>
       <th scope="col" >#</th>
@@ -176,12 +163,16 @@ export default function CategoriesList() {
   
   </tbody>
 </table>
+  <Pagination  totalNumberOfPages={totalNumberOfPages} getFun={getAllCategories} activePage={activePage} setActivePage={setActivePage} /> 
+    </>
   }
   </div>
- 
-  <DeleteComfirmation deleteItem={'Category'} deleteFunction={deleteCategory} show={showDeleteModal} handleClose={handleCloseDeleteModal} isDeleting={isDeleting}/>
+ {/* delete comfirmation */}
+<DeleteComfirmation deleteItem={'Category'} deleteFunction={deleteCategory} show={showDeleteModal} handleClose={handleCloseDeleteModal} isDeleting={isDeleting}/>
+
+{/* add + update category */}
+<CategoryData show={showAddEditCategoryModal} selectedCategory={selectedCategory}  handelClose={handleCloseCategoryModal} getAllCategories={getAllCategories} />
 
 
-<CategoryData show={showAddEditCategoryModal} selectedCategory={selectedCategory}  handelClose={handleCloseCategoryModal} handleCategorySubmit={selectedCategory?editCategory:submitCategory}  />
   </>
 }

@@ -32,3 +32,25 @@ export const addCategoryValidation={
   required:"The name field is required.",
 
   }
+export const recipeNameValidation={
+  required:"Recipe name is required"
+}
+export const recipeDesciption={
+  required:'Recipe description is required'
+}
+export const recipePrice={
+  required:'Recipe price is required',
+  pattern:{
+    value: /^\d{1,6}(\.\d{1,2})?$/, 
+    message: 'Enter a valid price',
+  }
+}
+export const recipeTagId={
+  required:'Tag name is required'
+}
+export const recipeImage={
+  required:'Recipe Image is required'
+}
+export const recipeCategories={
+  required:'Recipe Category is required'
+}

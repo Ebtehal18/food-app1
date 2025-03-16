@@ -18,7 +18,7 @@ export default function Register() {
                   <div className="input-group mb-3">
                <div className="input-group-prepend">
                 <span className="input-group-text h-100" id="basic-addon1">
-                <i class="fa-solid fa-circle-user" ></i>
+                <i className="fa-solid fa-circle-user" ></i>
               </span>
              </div>
              <input 
@@ -31,7 +31,7 @@ export default function Register() {
                 <div className="input-group mb-3">
                <div className="input-group-prepend">
                 <span className="input-group-text h-100" id="basic-addon1">
-                <i class="fa-solid fa-earth-africa"></i>
+                <i className="fa-solid fa-earth-africa"></i>
               </span>
              </div>
              <input 
@@ -69,7 +69,7 @@ export default function Register() {
                   <div className="input-group mb-3">
                <div className="input-group-prepend">
                 <span className="input-group-text h-100" id="basic-addon1">
-                <i class="fa-solid fa-mobile-screen"></i>
+                <i className="fa-solid fa-mobile-screen"></i>
               </span>
              </div>
              <input 
@@ -82,7 +82,7 @@ export default function Register() {
              <div className="input-group mb-3">
                <div className="input-group-prepend">
                 <span className="input-group-text h-100" id="basic-addon1">
-                <i class="fa-solid fa-phone"></i>
+                <i className="fa-solid fa-phone"></i>
               </span>
              </div>
              <input 

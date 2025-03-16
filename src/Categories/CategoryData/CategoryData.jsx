@@ -2,12 +2,36 @@ import React, { useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { addCategoryValidation } from "../../services/validations";
+import { toast } from "react-toastify";
+import { Categories_URLS } from "../../services/api/apiConfig";
+import { axiosPrivateInstance } from "../../services/api/apiInstance";
 
-export default function CategoryData({show,handelClose,handleCategorySubmit,selectedCategory}) {
+export default function CategoryData({show,handelClose,getAllCategories,selectedCategory}) {
   
   const {register,handleSubmit,formState:{errors,isSubmitting},setValue}=useForm()
-  
+
   const handelCloseModal=()=>  handelClose()
+
+  
+  // edit+Add category=============================
+     const handleCategorySubmit=async(value)=>{
+      console.log(value)
+      try {
+        const {data}=selectedCategory?
+        await axiosPrivateInstance.put(Categories_URLS.UPDATE_CATEGORY(selectedCategory?.id),value)
+        :await axiosPrivateInstance.post(Categories_URLS.CREATE_CATEGORY,value)
+        console.log(data)
+        handelCloseModal()
+        getAllCategories()
+        toast.success(selectedCategory?'Category Edited successfully':'Category Created successfully')
+      } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+      }
+     }
+   
+  
+
   useEffect(()=>{
     
     console.log(selectedCategory)
