@@ -15,7 +15,7 @@ export default function RecipeData() {
   const navigate=useNavigate()
   const [tags,setTags]=useState([])
   const [categories,setCategories]=useState([])
-  const {register,handleSubmit,formState:{errors,isSubmitting},setValue,setError,clearErrors,getValues}=useForm({
+  const {register,handleSubmit,formState:{errors,isSubmitting},setValue,setError,clearErrors,watch}=useForm({
     mode:"onChange"
   })
   const [loading,setIsLoading]=useState(recipeId?true:false)
@@ -130,9 +130,6 @@ try {
   },[recipeId,setValue])
 
 
-useEffect(()=>{
-  clearErrors("recipeImage");
-},[])
 
 
   return <>
@@ -215,7 +212,7 @@ useEffect(()=>{
       />
    
 </div>
-{errors.recipeImage && <div className="mb-3 alert alert-danger w-100">{errors.recipeImage.message}</div>}
+{/* {errors.recipeImage && <div className="mb-3 alert alert-danger w-100">{errors.recipeImage.message}</div>} */}
 
 
 
