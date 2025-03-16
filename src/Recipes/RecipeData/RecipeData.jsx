@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { data, Link, useNavigate, useParams } from "react-router-dom";
 import { axiosPrivateInstance, imgURL } from "../../services/api/apiInstance";
@@ -15,12 +15,13 @@ export default function RecipeData() {
   const navigate=useNavigate()
   const [tags,setTags]=useState([])
   const [categories,setCategories]=useState([])
-  const {register,handleSubmit,formState:{errors,isSubmitting},setValue,setError,clearErrors,watch}=useForm({
+  const {register,handleSubmit,formState:{errors,isSubmitting},setValue,setError,clearErrors,getValues}=useForm({
     mode:"onChange"
   })
   const [loading,setIsLoading]=useState(recipeId?true:false)
 const [fileObjects, setFileObjects] = useState([]);
 
+const isFirstRender = useRef(true);
 
 const  onSubmit=async(values)=>{
 
@@ -30,13 +31,11 @@ const  onSubmit=async(values)=>{
   // formData.append('categoriesIds',values.categoriesIds)
   // formData.append('tagId',values.tagId)
   // formData.append('recipeImage',values.recipeImage[0])
-if(!values.recipeImage){
-  setError("recipeImage", { type: "manual", message: "Image is required" });
-return
-}else{
-  clearErrors('recipeImage')
-}
 
+if(!values.imagePath){
+  setError("recipeImage", { type: "manual", message: "Image is required" });
+  return
+}
   const formData=new FormData()
   for (let key in values) {
   if (key==='recipeImage'&&values[key]?.[0]) formData.append(key,values[key][0])
@@ -54,7 +53,7 @@ try {
   navigate("/dashboard/recipes")
 } catch (error) {
   console.log(error)
-  toast.error(recipeId?"Failed to update recipe. Please try again.":"Failed to create recipe. Please try again.")
+  toast.error(error?.message)
 }
   }
   // get all tags
@@ -102,17 +101,19 @@ try {
              setValue('tagId',data?.tag?.id)
              setValue('categoriesIds',data?.category?.[0].id)
              setValue("description",data?.description)
-             const fileUrl = `${imgURL}/${data.imagePath}`;
+      if(data?.imagePath){
+        const fileUrl = `${imgURL}/${data.imagePath}`;
 
-             const fakeFile = {
-               data: fileUrl, 
-               file: new File([], "preview.jpg"), 
-             };
-           
-            //  console.log(fakeFile);
-             
-             setFileObjects([fakeFile]);
-             setValue("recipeImage", fileUrl); 
+        const fakeFile = {
+          data: fileUrl, 
+          file: new File([], "preview.jpg"), 
+        };
+      
+       //  console.log(fakeFile);
+        
+        setFileObjects([fakeFile]);
+        setValue("recipeImage", fileUrl); 
+      }
             
             } catch (error) {
               console.log(error)
@@ -127,10 +128,22 @@ try {
     })()
   
 
-  },[recipeId,setValue])
+  },[recipeId])
 
-
-
+  const handelImage=(files)=>{
+    if (isFirstRender.current) {
+      isFirstRender.current = false; // Prevent first trigger
+      return;
+    }
+  
+    console.log(files);
+    if (files.length > 0) {
+      clearErrors("recipeImage");
+      setValue("recipeImage", files[0]);
+    } else {
+      setError("recipeImage", { type: "manual", message: "Image is required" });
+    }
+  }
 
   return <>
   <div className="d-flex details container-fluid  px-md-4 px-2 ">
@@ -197,22 +210,13 @@ try {
 <DropzoneArea
   acceptedFiles={["image/*"]}
   dropzoneText="Drag & Drop or Choose an Item Image to Upload"
-  onChange={(files) => {
-    console.log(files)
-    if (files.length === 0) {
-      setError("recipeImage", { type: "manual", message: "Image is required" });
-
-      }else{
-        clearErrors("recipeImage");
-        setValue("recipeImage", files[0]); 
-      }
-      }}
+  onChange={handelImage}
       filesLimit={1}
-  initialFiles={fileObjects.length>0?[fileObjects[0].data]:[]}
+      initialFiles={fileObjects.length>0?[fileObjects[0]?.data]:[]}
       />
    
 </div>
-{/* {errors.recipeImage && <div className="mb-3 alert alert-danger w-100">{errors.recipeImage.message}</div>} */}
+{errors.recipeImage && <div className="mb-3 alert alert-danger w-100">{errors.recipeImage.message}</div>}
 
 
 
