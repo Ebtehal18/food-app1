@@ -23,6 +23,9 @@ const [fileObjects, setFileObjects] = useState([]);
 
 const isFirstRender = useRef(true);
 
+
+
+
 const  onSubmit=async(values)=>{
 
   // formData.append('name',values.name)
@@ -32,20 +35,22 @@ const  onSubmit=async(values)=>{
   // formData.append('tagId',values.tagId)
   // formData.append('recipeImage',values.recipeImage[0])
 
-if(!values.imagePath){
+if(!values.recipeImage){
   setError("recipeImage", { type: "manual", message: "Image is required" });
   return
 }
+
   const formData=new FormData()
+
   for (let key in values) {
-  if (key==='recipeImage'&&values[key]?.[0]) formData.append(key,values[key][0])
+  if (key==='recipeImage'&& values[key]?.length > 0) formData.append(key,values[key][0])
   else formData.append(key,values[key])
 }
 
 console.log(values)
 try {
   const {data}= recipeId?
-  await axiosPrivateInstance.put(Recipes_URLS.UPDATE_RECIPE(recipeId),formData)
+   await axiosPrivateInstance.put(Recipes_URLS.UPDATE_RECIPE(recipeId),formData)
   :await axiosPrivateInstance.post(Recipes_URLS.CREATE_RECIPE,formData)
 
   console.log(data)
@@ -60,7 +65,7 @@ try {
   const getTags=async()=>{
     try {
       const {data}=await axiosPrivateInstance.get(Tag_URl.GET_TAGS)
-      console.log(data)
+      // console.log(data)
       setTags(data)
     } catch (error) {
       console.log(error)
@@ -76,7 +81,7 @@ try {
             pageNumber
           }
          })
-         console.log(data)
+        //  console.log(data)
          setCategories(data?.data)
         } catch (error) {
           console.log(error)
@@ -90,7 +95,6 @@ try {
       // edit recipe
       // get first the recipe
       if(recipeId){
-        console.log(recipeId)
       const getRecipe=async()=>{
         setIsLoading(true)
         try {
@@ -101,18 +105,29 @@ try {
              setValue('tagId',data?.tag?.id)
              setValue('categoriesIds',data?.category?.[0].id)
              setValue("description",data?.description)
-      if(data?.imagePath){
+      // if(data?.imagePath){
+      //   const fileUrl = `${imgURL}/${data.imagePath}`;
+
+      //   const fakeFile = {
+      //     data: fileUrl, 
+      //     file: new File([], "preview.jpg"), 
+      //   };
+      
+      //   console.log(fakeFile);
+        
+      //   setFileObjects([fakeFile]);
+      //   setValue("recipeImage", fileUrl); 
+      //   }
+      if (data?.imagePath) {
         const fileUrl = `${imgURL}/${data.imagePath}`;
 
-        const fakeFile = {
-          data: fileUrl, 
-          file: new File([], "preview.jpg"), 
-        };
-      
-       //  console.log(fakeFile);
-        
-        setFileObjects([fakeFile]);
-        setValue("recipeImage", fileUrl); 
+        // Fetch image as a File object
+        const response = await fetch(fileUrl);
+        const blob = await response.blob();
+        const file = new File([blob], "recipeImage.jpg", { type: blob.type });
+
+        setFileObjects([file]);
+        setValue("recipeImage", file);
       }
             
             } catch (error) {
@@ -128,18 +143,21 @@ try {
     })()
   
 
-  },[recipeId])
+  },[recipeId,setValue])
 
   const handelImage=(files)=>{
+    // console.log(isFirstRender)
     if (isFirstRender.current) {
       isFirstRender.current = false; // Prevent first trigger
       return;
     }
   
     console.log(files);
+
     if (files.length > 0) {
       clearErrors("recipeImage");
       setValue("recipeImage", files[0]);
+
     } else {
       setError("recipeImage", { type: "manual", message: "Image is required" });
     }
@@ -212,7 +230,7 @@ try {
   dropzoneText="Drag & Drop or Choose an Item Image to Upload"
   onChange={handelImage}
       filesLimit={1}
-      initialFiles={fileObjects.length>0?[fileObjects[0]?.data]:[]}
+      initialFiles={fileObjects.map((file) => URL.createObjectURL(file))}
       />
    
 </div>
