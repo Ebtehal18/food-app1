@@ -1,6 +1,37 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { emailValidation, otpValidation } from "../../services/validations";
+import { axiosPublicInstance } from "../../services/api/apiInstance";
+import { Users_URLS } from "../../services/api/apiConfig";
+import { toast } from "react-toastify";
 
 export default function VerifyAccount() {
+
+  const {state}= useLocation()
+   console.log(state)
+
+const {register,handleSubmit,formState:{errors,isSubmitting}}=useForm({
+  defaultValues:{email:state?.email},
+  mode:"onChange"
+})
+const navigate=useNavigate()
+
+
+ const onSubmit=async(values)=>{
+try {
+  const {data}=await axiosPublicInstance.put(Users_URLS.VERIFY_USER,values)
+  console.log(data)
+  toast.success(data?.message)
+  navigate('/login')
+} catch (error) {
+  console.log(error)
+  toast.error(error?.response?.data?.message||'Somthing Went Wrong')
+}
+ }
+
+
+ 
   return <>
    <div className="title my-3">
                 <h3 className="h5"> Verify Account  </h3>
@@ -8,7 +39,7 @@ export default function VerifyAccount() {
               </div>
 
 
-            <form >
+            <form onSubmit={handleSubmit(onSubmit)} >
             {/* email input */}
             <div className="input-group mb-3">
              <div className="input-group-prepend">
@@ -17,10 +48,10 @@ export default function VerifyAccount() {
             </span>
            </div>
            <input 
-      
+      {...register('email',emailValidation)}
             type="email" className="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1"/>
             </div>
-            {/* {errors.email && <div className=" mb-3 alert-danger alert">{errors.email.message}</div>} */}
+            {errors.email && <div className=" mb-3 alert-danger alert">{errors.email.message}</div>}
 
             {/* password input */}
             <div className="input-group mb-3 ">
@@ -30,22 +61,24 @@ export default function VerifyAccount() {
             </span>
            </div>
            <input 
-        
+        {...register('code',otpValidation)}
           type={'text'} className="form-control pass-input" placeholder="OTP" aria-label="OTP" aria-describedby="basic-addon1"/>
           <span className="btn btn-outline-secondary  border-start-0 border-secoundry-subtle" type='button'
-          // onClick={()=>setShowPassword(!showPassword)}
-          >
-           {/* <i className={`fa-solid ${showPassword?"fa-eye":"fa-eye-slash"}`}></i> */}
+        >
           </span>
             </div>
-            {/* {errors.password && <div className="mb-3 alert-danger alert">{errors.password.message}</div>} */}
+            {errors.code && <div className="mb-3 alert-danger alert">{errors.code.message}</div>}
 
 
           
 
 
               <button className=" text-white w-100 btn-form">
-               Send</button>
+              {isSubmitting?  <>
+                <i className="fa fa-spin fa-spinner"></i>
+                <span> Sending...</span>
+                </>:'Send'}
+               </button>
             </form>
     
   </>

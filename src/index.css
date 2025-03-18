@@ -423,17 +423,23 @@ width: fit-content;
     flex-wrap: wrap !important;
 }
 
-.recipes-data .css-1agvk75{
+.recipes-data .css-1agvk75,
+.register-img .css-1agvk75{
     background-color:#F1FFF0  ;
-    min-height: 150px ;
+    min-height: 120px ;
     font-size: 15px ;
 }
-.recipes-data .css-17pbpn5-MuiTypography-root{
-    font-size: 15px;
+.recipes-data .css-17pbpn5-MuiTypography-root,
+.register-img p.MuiTypography-root  {
+    font-size: 15px !important;
 }
 .css-fksjaj {
     justify-content: center;
 }
+.alert{
+    font-size: 14px;
+}
+
 @media (max-width:768px) {
     input{
         font-size: 12px

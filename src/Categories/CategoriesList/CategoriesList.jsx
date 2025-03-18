@@ -65,7 +65,7 @@ export default function CategoriesList() {
         toast.success('Category deleted successfully!')
      } catch (error) {
         console.log(error)
-        toast.error('Failed to delete category. Please try again.')
+        toast.error(error?.response?.data?.message||'Failed to delete category. Please try again.')
      }finally{
       setIsDeleting(false)
      }
@@ -150,7 +150,7 @@ export default function CategoriesList() {
   <i className="fa-solid fa-ellipsis"></i>
   </button>
   <ul className="dropdown-menu">
-    <li><button className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
+    {/* <li><button className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li> */}
     <li><button  className="dropdown-item" type="button" onClick={()=>handlShowCategoryModal(category)}><i className="fa-solid fa-pen-to-square me-3"></i>Edit</button></li>
     <li><button onClick={()=>handleShowDeleteModal(category?.id)} className="dropdown-item" type="button" > <i className="fa-solid fa-trash me-3"></i>Delete</button></li>
   </ul>
@@ -163,7 +163,7 @@ export default function CategoriesList() {
   
   </tbody>
 </table>
-  <Pagination  totalNumberOfPages={totalNumberOfPages} getFun={getAllCategories} activePage={activePage} setActivePage={setActivePage} /> 
+  <Pagination  totalNumberOfPages={totalNumberOfPages} getFun={getAllCategories} setActivePage={setActivePage} activePage={activePage} /> 
     </>
   }
   </div>
@@ -176,3 +176,4 @@ export default function CategoriesList() {
 
   </>
 }
+

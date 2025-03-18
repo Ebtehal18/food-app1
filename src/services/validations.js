@@ -54,3 +54,34 @@ export const recipeImage={
 export const recipeCategories={
   required:'Recipe Category is required'
 }
+
+export const UserNameValidation={
+  required:"UserName is required",
+  minLength:{
+    value:4,
+    message:'The userName must be at least 4 characters'
+  },
+  maxLength:{
+  value:8,
+  message:'The userName may not be greater than 8 characters.'
+  },
+  pattern:{
+   value:/^[A-Za-z]{3,}\d+$/,
+   message:'The userName must contain letters, and end with numbers without spaces.'
+  }
+}
+
+export const CountryValidation={
+  required:"Country is required",
+  pattern:{
+    value:/^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-' ]?[A-Za-zÀ-ÖØ-öø-ÿ]+)*$/,
+    message:"Please Enter a valid Country"
+  }
+}
+export const PhoneValidation={
+  required:"PhoneNumber is required",
+  pattern:{
+    value:/^(\+20|0)?1[0-2,5]\d{8}$/,
+    message:"Please Enter a valid Egyption Number"
+  }
+}

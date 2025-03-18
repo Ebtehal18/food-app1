@@ -1,19 +1,35 @@
 import React from "react";
 
-export default function Pagination({totalNumberOfPages,getFun,activePage,setActivePage,isUsers}) {
+export default function Pagination({totalNumberOfPages,getFun,setActivePage,activePage,isUsers}) {
+  
 
- 
+ const handelPrevios=()=>{
+  if (activePage>1){
+    setActivePage(prev => {
+      const newPage = prev - 1;
+      getFun(isUsers ? 15 : 5, newPage);
+      return newPage;
+    });
+  }
+ }
+const handelNext=()=>{
+  if(activePage<totalNumberOfPages.length){
+    setActivePage(prev => {
+      const newPage = prev + 1;
+      getFun(isUsers ? 15 : 5, newPage);
+      console.log(newPage)
+      return newPage;
+    });
+  }
+}
+
+
   return <div className="container">
   <nav aria-label="...">
     <ul className="pagination justify-content-end flex-wrap gap-y-2">
       <li  className={`page-item ${activePage === 1 ? "disabled" : ""}`} 
-      onClick={()=>{
-        if (activePage>1){
-          setActivePage(activePage-1)
-          getFun(isUsers?15:5,activePage-1);
-        }
-      }
-      }>
+      onClick={handelPrevios}
+      >
         <a className="page-link">Previous</a>
   
       </li>
@@ -29,12 +45,7 @@ export default function Pagination({totalNumberOfPages,getFun,activePage,setActi
       }
       )}
   
-     <li  className={`page-item ${activePage === totalNumberOfPages.length ? "disabled" : ""}`}  onClick={()=>{
-      if(activePage<totalNumberOfPages.length){
-        setActivePage(activePage+1)
-        getFun(isUsers?15:5,activePage+1);
-      }
-      }}>
+     <li  className={`page-item ${activePage === totalNumberOfPages.length ? "disabled" : ""}`}  onClick={handelNext}>
          <a className="page-link" href="#">Next</a>
        </li>
      

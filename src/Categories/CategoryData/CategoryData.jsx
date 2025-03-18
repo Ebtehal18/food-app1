@@ -11,6 +11,13 @@ export default function CategoryData({show,handelClose,getAllCategories,selected
   const {register,handleSubmit,formState:{errors,isSubmitting},setValue}=useForm()
 
   const handelCloseModal=()=>  handelClose()
+// if it was only for editing 
+// const { register } = useForm({
+//   defaultValues: {
+//     name: selectedCategory?.name, // No need for useEffect
+//   }
+// });
+
 
   
   // edit+Add category=============================
@@ -26,7 +33,7 @@ export default function CategoryData({show,handelClose,getAllCategories,selected
         toast.success(selectedCategory?'Category Edited successfully':'Category Created successfully')
       } catch (error) {
         console.log(error)
-        toast.error(error.message)
+        toast.error(error?.response?.data?.message||'Somthing Went Wrong')
       }
      }
    
@@ -48,7 +55,7 @@ export default function CategoryData({show,handelClose,getAllCategories,selected
 
  const isEditing=selectedCategory?'Edit':"Save"
   return <>
-  {/* add category modal */}
+  {/* add category modal+ edit  */}
 <Modal
         show={show}
         onHide={handelCloseModal}

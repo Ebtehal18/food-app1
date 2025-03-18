@@ -32,7 +32,6 @@ export default function RecipesList() {
   const [searchName,setSearchName]=useState('')
   const [selectTag,setSelectTag]=useState('')
   const [selectCategory,setSelectCategory]=useState('')
-  const navigate=useNavigate()
 
 
   const [show, setShow] = useState(false);
@@ -48,6 +47,8 @@ export default function RecipesList() {
     setShowRecipe(true)
     getRecipe(id)
   }
+
+  const [isMobile,setIsMobile]=useState(false)
 
 // get all recipe
   const getAllRecipes=async(pageSize,pageNumber,name,tagId,categoryId)=>{
@@ -130,7 +131,7 @@ const getTags=async()=>{
       }
      }
   
-// search input
+// search input========================================================
 const getSearch=(e)=>{
 setSearchName(e.target.value)
 getAllRecipes(5,1,e.target.value,selectTag,selectCategory)
@@ -149,6 +150,16 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
       getAllRecipes(5,1)
       getTags()
       getAllCategories(100000,1)
+
+
+      const handleIsMobile=()=>{
+        setIsMobile(window.innerWidth<=768)
+      }
+      handleIsMobile()
+      window.addEventListener('resize',handleIsMobile)
+      return ()=>{
+        window.removeEventListener('resize',handleIsMobile)
+      }
     },[])
 
     return <>
@@ -216,8 +227,8 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
       <th scope="col">Name</th>
       <th scope="col">Image</th>
       <th scope="col">Price</th>
-      <th scope="col">Description</th>
-      <th scope="col">tag</th>
+      {!isMobile?<th scope="col">Description</th>:null}
+      {!isMobile? <th scope="col">tag</th>:null}
       <th scope="col">Category</th>
       <th scope="col">Actions</th>
     </tr>
@@ -228,8 +239,8 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
       <td className="align-middle">{recipe.name}</td>
       <td className="align-middle">{<img loading="lazy" src={recipe.imagePath?`${imgURL}/${recipe.imagePath}`:noimg} alt={recipe.name} className="recipe-img rounded-2" />}</td>
       <td className="align-middle">{recipe.price} EGP</td>
-      <td className="align-middle">{recipe.description}</td>
-      <td className="align-middle">{recipe.tag.name}</td>
+      {!isMobile?<td className="align-middle">{recipe.description}</td>:null}
+      {!isMobile?<td className="align-middle">{recipe.tag.name}</td>:null}
       <td className="align-middle">{recipe?.category[0]?.name}</td>
       <td className="align-middle">
       <div className="dropdown">
@@ -244,7 +255,7 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
 </div>
     
       </td>
-    </tr>):<td colSpan="7" className="text-center">
+    </tr>):<td colSpan={!isMobile?'7':'5'} className="text-center">
       <Nodata />
     </td>}
   
@@ -259,7 +270,7 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
 
 
 
-{/* show recipe detail */}
+{/* show recipe detail ===================================================*/}
   <Modal centered show={showRecipe} onHide={handleCloseRecipe}>
 
        {loadingRecipe? <div className="load-detail">  <BeatLoader color="rgba(0, 146, 71, 1)" size={20} /></div>:<>

@@ -81,10 +81,10 @@ export default function UsersList() {
         console.log(data)
         handleCloseeModal()
         getAllUsers()
-        toast.success('User deleted successfully!')
+        toast.success(data?.message)
      } catch (error) {
         console.log(error)
-        toast.error('Failed to delete user. Please try again.')
+        toast.error(error?.response?.data?.message||'Failed to delete user. Please try again.')
      }finally{
       setIsDeleting(false)
      }
@@ -134,6 +134,9 @@ return ()=>{
   window.removeEventListener('resize',handelIsMobile)
 }
   },[])
+
+
+  
   return <>
   <Header 
     title={'Users'} 
@@ -214,14 +217,14 @@ return ()=>{
   </button>
   <ul className="dropdown-menu">
     <li><button onClick={()=>handleShowUser(user?.id)} className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
-    <li><button className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</button></li>
+    {/* <li><button className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</button></li> */}
     <li><button onClick={()=>handleShowModal(user?.id)} className="dropdown-item" type="button" > <i className="fa-solid fa-trash me-3"></i>Delete</button></li>
 
   </ul>
 </div>
     
       </td>
-    </tr>):<td colSpan="5" className="text-center">
+    </tr>):<td colSpan={!isMobile?"5":"4"} className="text-center">
       <Nodata />
     </td>}
   

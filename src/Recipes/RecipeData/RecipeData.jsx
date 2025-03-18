@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { data, Link, useNavigate, useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { axiosPrivateInstance, imgURL } from "../../services/api/apiInstance";
 import { Categories_URLS, Recipes_URLS, Tag_URl } from "../../services/api/apiConfig";
 import { recipeCategories, recipeDesciption, recipeNameValidation, recipePrice, recipeTagId } from "../../services/validations";
 import { toast } from "react-toastify";
-import Loading from "../../Shared/Loading/Loading";
 import { DropzoneArea } from "mui-file-dropzone";
+
+import Loading from "../../Shared/Loading/Loading";
+import uploadIcon from "../../assets/images/upload.png"; 
 
 
 
@@ -15,52 +17,43 @@ export default function RecipeData() {
   const navigate=useNavigate()
   const [tags,setTags]=useState([])
   const [categories,setCategories]=useState([])
-  const {register,handleSubmit,formState:{errors,isSubmitting},setValue,setError,clearErrors,getValues}=useForm({
+  const {register,handleSubmit,formState:{errors,isSubmitting},setValue,setError,clearErrors}=useForm({
     mode:"onChange"
   })
-  const [loading,setIsLoading]=useState(recipeId?true:false)
+const [loading,setIsLoading]=useState(recipeId?true:false)
 const [fileObjects, setFileObjects] = useState([]);
 
-const isFirstRender = useRef(true);
 
-
-
-
-const  onSubmit=async(values)=>{
-
-  // formData.append('name',values.name)
-  // formData.append('description',values.description)
-  // formData.append('price',values.price)
-  // formData.append('categoriesIds',values.categoriesIds)
-  // formData.append('tagId',values.tagId)
-  // formData.append('recipeImage',values.recipeImage[0])
-
+const onSubmit=async(values)=>{
 if(!values.recipeImage){
   setError("recipeImage", { type: "manual", message: "Image is required" });
   return
 }
 
-  const formData=new FormData()
-
-  for (let key in values) {
-  if (key==='recipeImage'&& values[key]?.length > 0) formData.append(key,values[key][0])
-  else formData.append(key,values[key])
+const formData=new FormData()
+for(let key in values){
+      formData.append(key, values[key]);
 }
+// to see formatedata
+const entries = Object.fromEntries(formData.entries());
+console.log(entries)
 
-console.log(values)
 try {
-  const {data}= recipeId?
-   await axiosPrivateInstance.put(Recipes_URLS.UPDATE_RECIPE(recipeId),formData)
-  :await axiosPrivateInstance.post(Recipes_URLS.CREATE_RECIPE,formData)
-
+   const {data}=recipeId? 
+   await axiosPrivateInstance.put(Recipes_URLS.UPDATE_RECIPE(recipeId),formData):
+   await axiosPrivateInstance.post(Recipes_URLS.CREATE_RECIPE,formData)
   console.log(data)
   toast.success(recipeId?'The Recipe updated successfully':'The Recipe created successfully')
   navigate("/dashboard/recipes")
 } catch (error) {
-  console.log(error)
-  toast.error(error?.message)
+    console.log(error)
+  toast.error(error?.response?.data?.message||'Somthing Went Wrong')
 }
-  }
+}
+
+
+
+
   // get all tags
   const getTags=async()=>{
     try {
@@ -88,77 +81,53 @@ try {
         }
 }
 
+
   useEffect(()=>{
     (async()=>{
-    await getAllCategories(100000,1)
-    await getTags()
-      // edit recipe
-      // get first the recipe
-      if(recipeId){
+     await getAllCategories(1000,1)
+     await getTags()
+
+      if (recipeId){
+        console.log(recipeId)
       const getRecipe=async()=>{
         setIsLoading(true)
         try {
-             const {data}=await axiosPrivateInstance.get(Recipes_URLS.GET_RECIPE(recipeId))
-             console.log(data)
-             setValue('name',data?.name)
-             setValue('price',data?.price)
-             setValue('tagId',data?.tag?.id)
-             setValue('categoriesIds',data?.category?.[0].id)
-             setValue("description",data?.description)
-      // if(data?.imagePath){
-      //   const fileUrl = `${imgURL}/${data.imagePath}`;
-
-      //   const fakeFile = {
-      //     data: fileUrl, 
-      //     file: new File([], "preview.jpg"), 
-      //   };
-      
-      //   console.log(fakeFile);
-        
-      //   setFileObjects([fakeFile]);
-      //   setValue("recipeImage", fileUrl); 
-      //   }
-      if (data?.imagePath) {
-        const fileUrl = `${imgURL}/${data.imagePath}`;
-
-        // Fetch image as a File object
-        const response = await fetch(fileUrl);
-        const blob = await response.blob();
-        const file = new File([blob], "recipeImage.jpg", { type: blob.type });
-
-        setFileObjects([file]);
-        setValue("recipeImage", file);
-      }
-            
-            } catch (error) {
-              console.log(error)
-            }finally{
-              setIsLoading(false)
-            }
+          const {data}=await axiosPrivateInstance.get(Recipes_URLS.GET_RECIPE(recipeId))
+          console.log(data)
+          setValue('name',data?.name)
+          setValue('price',data?.price)
+          setValue('tagId',data?.tag?.id)
+          setValue('categoriesIds',data?.category?.[0].id)
+          setValue("description",data?.description)
+          if(data?.imagePath){
+            const fileUrl = `${imgURL}/${data.imagePath}`;
+            const response=await fetch(fileUrl)
+            const blob =await response.blob()
+            const file = new File([blob], "recipeImage.jpg", { type: blob.type })
+            // console.log(file)
+            setFileObjects(file)
+            setValue('recipeImage',file)
+           
           }
-          getRecipe()
-          console.log(fileObjects)
+        } catch (error) {
+          console.log(error)
+        }finally{
+          setIsLoading(false)
         }
-
+      }
+      getRecipe()
+      }
     })()
-  
+},[])
 
-  },[recipeId,setValue])
-
+// handlong image=======================================================================
   const handelImage=(files)=>{
-    // console.log(isFirstRender)
-    if (isFirstRender.current) {
-      isFirstRender.current = false; // Prevent first trigger
-      return;
-    }
-  
-    console.log(files);
-
+    console.log(files[0]);
     if (files.length > 0) {
-      clearErrors("recipeImage");
       setValue("recipeImage", files[0]);
-
-    } else {
+      clearErrors("recipeImage");
+    } 
+    else {
       setError("recipeImage", { type: "manual", message: "Image is required" });
     }
   }
@@ -223,16 +192,20 @@ try {
 {errors.description&& <div className=" mb-3 alert-danger alert">{errors.description.message}</div>}
 
 {/* recipe img */}
-<div className="input-group mb-3">
+<div className="input-group mb-3 img-iput">
 
-<DropzoneArea
+ <DropzoneArea
   acceptedFiles={["image/*"]}
   dropzoneText="Drag & Drop or Choose an Item Image to Upload"
   onChange={handelImage}
   filesLimit={1}
-  initialFiles={fileObjects.map((file) => URL.createObjectURL(file))}
-      />
-   
+  initialFiles={[fileObjects]}
+
+
+  Icon={() => <img src={uploadIcon} alt="Upload" width="30"className="mb-2" />}
+
+      /> 
+
 </div>
 {errors.recipeImage && <div className="mb-3 alert alert-danger w-100">{errors.recipeImage.message}</div>}
 
