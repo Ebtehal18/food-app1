@@ -429,7 +429,7 @@ width: fit-content;
     min-height: 120px ;
     font-size: 15px ;
 }
-.recipes-data .css-17pbpn5-MuiTypography-root,
+.recipes-data p.MuiTypography-root,
 .register-img p.MuiTypography-root  {
     font-size: 15px !important;
 }
