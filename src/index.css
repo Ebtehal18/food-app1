@@ -98,6 +98,9 @@ color:  rgba(74, 163, 90, 1);
     border: 0;
   }
 
+  .logo{
+    width: 40%;
+  }
 /* side bar styling  */
 .sidebar-container .sideBarLogo{
     width: 130px;
@@ -293,6 +296,9 @@ color: var(--delete-color);
 border:1px solid var(--delete-color);
 color: var(--delete-color);
 }
+.logout{
+    margin-top: 35px;
+}
 
 /* scroll styling */
 .overflow-y-auto::-webkit-scrollbar,
@@ -417,6 +423,13 @@ width: fit-content;
 .page-link,
 .page-link:hover{
     color: var(--main-color);
+}
+.page-link.active:hover {
+    color: white;
+}
+.page-link:hover{
+    background-color: var(--main-color);
+    color: white;
 }
 .pagination {
     row-gap: 8px;

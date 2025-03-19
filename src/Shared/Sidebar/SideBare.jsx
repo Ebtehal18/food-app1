@@ -11,6 +11,7 @@ import receipeIcon  from '../../assets/images/receipes-icon.png'
 import logoutIcon  from '../../assets/images/logout-icon.png'
 import ChangePass from "../../Authentication/Change-pass/ChangePass";
 import { UseAuthContext } from "../../context/authContext";
+import DeleteComfirmation from "../DeleteComfirmation/DeleteComfirmation";
 
 
 export default function SideBare() {
@@ -19,7 +20,13 @@ export default function SideBare() {
   const [show, setShow] = useState(false);   
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
+
+  const [showLogOut, setShowShowLogOut] = useState(false);   
+  const handleShowLogOut = () => setShowShowLogOut(true);
+  const handleCloseLogOut = () => setShowShowLogOut(false);
   const [isCollapsed,setIsCollapsed]=useState(false)
+
+
 
   const toggleCollapse=()=>{ 
     if(window.innerWidth>=768){
@@ -48,6 +55,8 @@ useEffect(()=>{
 
   return <div className="sidebar-container vh-100">
       <ChangePass show={show} handleClose={handleClose} logOut={logOut} />
+
+      <DeleteComfirmation show={showLogOut} handleClose={handleCloseLogOut} deleteFunction={logOut} />
     <Sidebar collapsed={isCollapsed}>
   <Menu  menuItemStyles={{
       button: {
@@ -63,7 +72,7 @@ useEffect(()=>{
     <MenuItem component={<NavLink to="/dashboard/recipes" />}   icon	={<img src={receipeIcon} alt="receipeicon"/> }> Recipes </MenuItem>
     <MenuItem component={<NavLink to="/dashboard/category" />}   icon	={<img src={categoryIcon} alt="categoryicon"/> }> Categories </MenuItem>
     <MenuItem onClick={handleShow}   icon	={<img src={changeIcon} alt="changeicon"/>}> Change Password </MenuItem>
-    <MenuItem  onClick={logOut} icon={<img src={logoutIcon} alt="logouticon"/>}> Logout </MenuItem>
+    <MenuItem   onClick={handleShowLogOut} className="logout" icon={<img src={logoutIcon} alt="logouticon"/>}> Logout </MenuItem>
   
   </Menu>
 </Sidebar>

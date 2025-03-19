@@ -25,16 +25,26 @@ export default function DeleteComfirmation({show,handleClose,deleteFunction,isDe
         <Modal.Body>
         <img src={Nodataimg} alt="no data img" />
         <div>
-          <h4>Delete This {deleteItem} ?</h4>
-          <p>are you sure you want to delete this {deleteItem} ? if you are sure just click on delete it</p>
+          {deleteItem?<><h4>Delete This {deleteItem} ?</h4>
+          <p>are you sure you want to delete this {deleteItem} ? if you are sure just click on delete it</p></>
+          :<>
+          <h4>Are you sure you want to log out?</h4>
+          <p>If you log out, you will need to sign in again to access your account.</p>
+          </>}
         </div>
         </Modal.Body>
         <Modal.Footer>
-        <button type="button" 
-        onClick={deleteFunction} className="btn delete-btn " disabled={isDeleting} >{isDeleting?<>
-          <i className="fa fa-spin fa-spinner"></i>
-          <span> Deleting...</span>
-        </>:`Delete this ${deleteItem}` }</button>
+          {deleteItem? 
+            <button type="button" 
+            onClick={deleteFunction} className="btn delete-btn " disabled={isDeleting} >{isDeleting?<>
+              <i className="fa fa-spin fa-spinner"></i>
+              <span> Deleting...</span>
+            </>:`Delete this ${deleteItem}` }</button>:<button type="button" 
+        onClick={deleteFunction} className="btn delete-btn "  >
+          LogOut
+          </button>
+        }
+      
         </Modal.Footer>
       </Modal>
 
