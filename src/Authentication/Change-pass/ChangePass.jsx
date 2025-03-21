@@ -7,6 +7,7 @@ import { axiosPrivateInstance } from "../../services/api/apiInstance";
 import { Users_URLS } from "../../services/api/apiConfig";
 
 import logo from '../../assets/images/logo-change.png'
+import { UseAuthContext } from "../../context/authContext";
 
 
 export default function ChangePass({show,handleClose,logOut}) {

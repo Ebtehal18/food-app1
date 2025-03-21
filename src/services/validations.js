@@ -85,3 +85,11 @@ export const PhoneValidation={
     message:"Please Enter a valid Egyption Number"
   }
 }
+
+export const PassComfirmValidation={
+    required:'confirmPassword is Required',
+    pattern:{
+      value:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/,
+     message:"The password must include at least one lowercase letter, one uppercase letter, one digit, one special character, and be at least 6 characters long."
+   }
+}

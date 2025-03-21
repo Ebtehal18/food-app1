@@ -11,7 +11,7 @@ import { Users_URLS } from "../../services/api/apiConfig";
 
 
 export default function Login() {
- const {fillAdminData}= UseAuthContext()
+ const {fillAdminData,getCurrentUser}= UseAuthContext()
 
   const [showPassword,setShowPassword]=useState(false)
   const {register,formState:{errors,isSubmitting},handleSubmit}=useForm()
@@ -28,7 +28,7 @@ export default function Login() {
      
      fillAdminData()
 
-     
+     await getCurrentUser()
      toast.success('Welcome Back!')
      //  navigate to dashboard
     navigate('/dashboard')

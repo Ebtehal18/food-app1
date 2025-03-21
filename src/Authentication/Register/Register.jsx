@@ -187,9 +187,6 @@ if(files[0]){
   dropzoneText="Drag & Drop or Choose an Item Image to Upload"
   onChange={handelImage}
   filesLimit={1}
-
-
-
   Icon={() => <img src={uploadIcon} alt="Upload" width="30"className="mb-2" />}
 
       /> 

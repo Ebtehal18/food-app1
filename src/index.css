@@ -58,14 +58,17 @@ body ,html{
  div .text-forget{
 color:  rgba(74, 163, 90, 1);
 }
-.auth .form-control{
+.auth .form-control,
+.profile .form-control{
     border-left: 0 transparent;
     background-color: var(--input-bg);
 }
-.auth .pass-input{
+.auth .pass-input,
+.profile .pass-input{
     border-right: 0 transparent;
 }
-.auth  .input-group-text{
+.auth  .input-group-text,
+.profile .input-group-text{
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: 2px solid gray;
@@ -73,7 +76,8 @@ color:  rgba(74, 163, 90, 1);
 
 
 }
-.auth .btn-outline-secondary{
+.auth .btn-outline-secondary,
+.profile .btn-outline-secondary{
     border-width: 1px 1px 1px 0;
     border-style: solid;
     border-color: #dee2e6;
@@ -100,6 +104,13 @@ color:  rgba(74, 163, 90, 1);
 
   .logo{
     width: 40%;
+  }
+  .personal-img{
+width: 70px;
+height: 70px;
+border-radius: 50%;
+object-fit: cover;
+
   }
 /* side bar styling  */
 .sidebar-container .sideBarLogo{
@@ -451,6 +462,36 @@ width: fit-content;
 }
 .alert{
     font-size: 14px;
+}
+.navbar .dropdown-toggle::after {
+    display:none;
+ 
+}
+.navbar .arrow{
+    font-size: 12px;
+}
+.navbar .nav-dropdown{
+    transform: translate3d(27px, 26.4px, 0px) !important;
+}
+.favorite img{
+    height: 220px;
+    object-fit: cover;
+    border-radius: 15px 15px 35px 35px;
+}
+.favorite{
+    box-shadow: 4px 4px 4px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    /* width: 345px; */
+}
+.favorite span{
+    color: var(--main-color);
+}
+.favorite .heart{
+    border-radius: 8px;
+    cursor: pointer;
+    top: 20px;
+    right: 20px;
+    border: 2px solid rgba(31, 38, 62, 1);
 }
 
 @media (max-width:768px) {

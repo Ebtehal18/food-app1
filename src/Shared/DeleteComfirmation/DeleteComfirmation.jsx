@@ -1,9 +1,8 @@
 import React from "react";
 import Nodataimg from '../../assets/images/no-data1.png'
 import Modal from 'react-bootstrap/Modal';
-import { useLocation } from "react-router-dom";
 
-export default function DeleteComfirmation({show,handleClose,deleteFunction,isDeleting,deleteItem}) {
+export default function DeleteComfirmation({show,handleClose,deleteFunction,isDeleting,deleteItem,AddToFav,logOut}) {
 
 
 
@@ -25,12 +24,20 @@ export default function DeleteComfirmation({show,handleClose,deleteFunction,isDe
         <Modal.Body>
         <img src={Nodataimg} alt="no data img" />
         <div>
+          {/* for deleting */}
           {deleteItem?<><h4>Delete This {deleteItem} ?</h4>
           <p>are you sure you want to delete this {deleteItem} ? if you are sure just click on delete it</p></>
-          :<>
-          <h4>Are you sure you want to log out?</h4>
-          <p>If you log out, you will need to sign in again to access your account.</p>
-          </>}
+          :null}
+          {/* for logging out  */}
+{logOut?<><h4>Are you sure you want to log out?</h4>
+  <p>If you log out, you will need to sign in again to access your account.</p></>:null}
+  {/* for adding  */}
+{AddToFav?<>
+<h4>Add This Recipe To Your Favorites? </h4>
+<p>are you sure you want to add this Recipe ? if you are sure just click on add it</p>
+</>:null
+}
+
         </div>
         </Modal.Body>
         <Modal.Footer>
@@ -39,11 +46,21 @@ export default function DeleteComfirmation({show,handleClose,deleteFunction,isDe
             onClick={deleteFunction} className="btn delete-btn " disabled={isDeleting} >{isDeleting?<>
               <i className="fa fa-spin fa-spinner"></i>
               <span> Deleting...</span>
-            </>:`Delete this ${deleteItem}` }</button>:<button type="button" 
+            </>:`Delete this ${deleteItem}` }</button>
+            :null
+        }
+
+{logOut?<button type="button" 
         onClick={deleteFunction} className="btn delete-btn "  >
           LogOut
-          </button>
-        }
+          </button>:null}
+
+          
+        {AddToFav?  <button type="button" 
+            onClick={deleteFunction} className="btn delete-btn " disabled={isDeleting} >{isDeleting?<>
+              <i className="fa fa-spin fa-spinner"></i>
+              <span> Adding...</span>
+            </>:`Add To Favorite List` }</button>:null}
       
         </Modal.Footer>
       </Modal>

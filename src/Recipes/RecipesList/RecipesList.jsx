@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Categories_URLS, Recipes_URLS, Tag_URl } from "../../services/api/apiConfig";
+import { Categories_URLS, Recipes_URLS, Tag_URl, UserRecipes_URLS } from "../../services/api/apiConfig";
 import { axiosPrivateInstance, imgURL } from "../../services/api/apiInstance";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { UseAuthContext } from "../../context/authContext";
+import { Modal } from "react-bootstrap";
+import { BeatLoader } from "react-spinners";
 
 import Header from "../../Shared/Header/Header";
 import receipeImgHeader from '../../assets/images/categoryimg-header.svg'
@@ -10,8 +13,6 @@ import Nodata from "../../Shared/Nodata/Nodata";
 import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmation";
 import Loading from "../../Shared/Loading/Loading";
 import noimg from '../../assets/images/no-plate2.jpg';
-import { Modal } from "react-bootstrap";
-import { BeatLoader } from "react-spinners";
 import Pagination from "../../Shared/Pagination/Pagination";
 
 
@@ -23,6 +24,8 @@ export default function RecipesList() {
   const [isDeleting,setIsDeleting]=useState(false)
   const [recipe,setRecipe]=useState(null)
 
+  const [favList,setFavList]=useState([])
+
   const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
   const [activePage,setActivePage]=useState(1)
   
@@ -32,6 +35,9 @@ export default function RecipesList() {
   const [searchName,setSearchName]=useState('')
   const [selectTag,setSelectTag]=useState('')
   const [selectCategory,setSelectCategory]=useState('')
+  const {adminData}=UseAuthContext()
+  const [selctedFavId,setselctedFavId]=useState(null)
+
 
 
   const [show, setShow] = useState(false);
@@ -45,10 +51,68 @@ export default function RecipesList() {
   const handleCloseRecipe = () => setShowRecipe(false);
   const handleShowRecipe = (id) => {
     setShowRecipe(true)
-    getRecipe(id)
+   if (adminData?.userGroup==='SystemUser'){
+    setselctedFavId(id)
+   }
+getRecipe(id)
   }
-
+ 
   const [isMobile,setIsMobile]=useState(false)
+
+const [isAddingFavLoading,setisAddingFavLoading]=useState(false)
+
+  const [showFavRecipe, setShowFavRecipe] = useState(false);
+  const handleCloseFavRecipe = () => setShowFavRecipe(false);
+  const handleShowFavRecipe = (id) => {
+    setShowFavRecipe(true)
+    setselctedFavId(id)
+  }
+// add to fav list
+const addToFav=async()=>{
+  if (adminData?.userGroup !== 'SystemUser') return
+
+  setisAddingFavLoading(true)
+
+
+  try {
+    // get all fav recipes
+    const response = await axiosPrivateInstance.get(UserRecipes_URLS.GET_USER_RECIPES, {
+      params: { pageSize: 1000, pageNumber: 1 }
+    });
+
+    const latestFavList = response?.data?.data || [];
+    console.log(latestFavList)
+    
+    // Check if the selected recipe is already in favorites
+    if (latestFavList.some((fav) => fav.recipe.id === selctedFavId)) {
+      toast.warning("This recipe is already in your favorites!");
+      setisAddingFavLoading(false);
+      return;
+    }
+
+    const {data}=await axiosPrivateInstance.post(UserRecipes_URLS.POST_USER_RECIPES,{'recipeId':selctedFavId})
+    console.log(data)
+   
+   
+    console.log(favList)
+    if (showFavRecipe){
+      handleCloseFavRecipe()
+    }else{
+      handleCloseRecipe() 
+    }
+    setFavList(latestFavList)
+    toast.success('Recipe Added To Favorite List Successfully')
+  } catch (error) {
+    console.log(error)
+  toast.error(error?.response?.data?.message||'Failed to add recipe to list. Please try again.')
+    
+  }finally{
+    setisAddingFavLoading(false)
+  }
+}
+
+
+
 
 // get all recipe
   const getAllRecipes=async(pageSize,pageNumber,name,tagId,categoryId)=>{
@@ -95,7 +159,7 @@ export default function RecipesList() {
      setLoadingRecipe(true)
     try {
       const {data}=await axiosPrivateInstance.get(Recipes_URLS.GET_RECIPE(id))
-      console.log(data)
+      // console.log(data)
       setRecipe(data)
     } catch (error) {
       console.log(error)
@@ -107,7 +171,7 @@ export default function RecipesList() {
 const getTags=async()=>{
   try {
     const {data}=await axiosPrivateInstance.get(Tag_URl.GET_TAGS)
-    console.log(data)
+    // console.log(data)
     setTags(data)
   } catch (error) {
     console.log(error)
@@ -124,13 +188,14 @@ const getTags=async()=>{
           pageNumber
         }
        })
-       console.log(data)
+      //  console.log(data)
        setCategories(data?.data)
       } catch (error) {
         console.log(error)
       }
      }
   
+ 
 // search input========================================================
 const getSearch=(e)=>{
 setSearchName(e.target.value)
@@ -152,6 +217,9 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
       getAllCategories(100000,1)
 
 
+
+  // getFavList()
+      
       const handleIsMobile=()=>{
         setIsMobile(window.innerWidth<=768)
       }
@@ -160,6 +228,9 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
       return ()=>{
         window.removeEventListener('resize',handleIsMobile)
       }
+
+
+      
     },[])
 
     return <>
@@ -171,21 +242,23 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
   />
 
    
-
- <div className="d-flex details container-fluid  px-md-4 px-2 ">
-    <div className={`w-100  d-flex flex-md-row flex-column justify-content-between py-2 py-md-5  px-3 rounded-3 align-items-center `}>
+<div className="d-flex details container-fluid  px-md-4 px-2 ">
+    <div className={`w-100  d-flex flex-md-row flex-column justify-content-between py-2 py-md-4  px-3 rounded-3 align-items-center `}>
     <div className="caption mb-2 mb-md-0">
       <h4 className="mb-0">Recipe Table Details </h4>
       <p className="mb-0">You can check all details</p>
     </div>
 
 
+{adminData?.userGroup==='SuperAdmin'? 
     <Link to={'/dashboard/recipes/new-recipe'} className={" btn-add px-3 py-2 text-decoration-none  px-md-5 py-md-3  text-white fw-bold"}>
       Add New Item
   </Link>
+    :''}
     </div>
   
   </div>
+
 
 <div className="container px-md-4 px-2  receipe-inputs">
   <div className="row">
@@ -234,7 +307,10 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
     </tr>
   </thead>
   <tbody>
-    {recipes.length>0? recipes.map((recipe,index)=><tr className={`table-row ${index%2==0?'odd-row':'even-row'}`} key={recipe.id}>
+    {recipes.length>0? recipes.map((recipe,index)=>{
+  
+
+    return  <tr className={`table-row ${index%2==0?'odd-row':'even-row'}`} key={recipe.id}>
 
       <td className="align-middle">{recipe.name}</td>
       <td className="align-middle">{<img loading="lazy" src={recipe.imagePath?`${imgURL}/${recipe.imagePath}`:noimg} alt={recipe.name} className="recipe-img rounded-2" />}</td>
@@ -249,13 +325,27 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
   </button>
   <ul className="dropdown-menu">
     <li><button onClick={()=>handleShowRecipe(recipe?.id)} className="dropdown-item" type="button"><i className="fa-solid fa-eye me-3"></i>View</button></li>
-    <li><Link to={`/dashboard/recipes/${recipe.id}`} className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</Link></li>
-    <li><button onClick={()=>handleShow(recipe.id)} className="dropdown-item" type="button"  > <i className="fa-solid fa-trash me-3"></i>Delete</button></li>
+    
+
+  {adminData?.userGroup==='SuperAdmin'?<> 
+   <li><Link to={`/dashboard/recipes/${recipe.id}`} className="dropdown-item" type="button"><i className="fa-solid fa-pen-to-square me-3"></i>Edit</Link></li>
+  <li><button onClick={()=>handleShow(recipe.id)} className="dropdown-item" type="button"  > <i className="fa-solid fa-trash me-3"></i>Delete</button></li>
+  </>
+   : <li>
+        <button
+          className="dropdown-item"
+          type="button"
+         
+          onClick={() => handleShowFavRecipe(recipe.id)}
+        >
+          <i className="fa-solid fa-heart me-3"></i>Add to Favorite
+        </button>
+     </li>}
   </ul>
 </div>
-    
       </td>
-    </tr>):<td colSpan={!isMobile?'7':'5'} className="text-center">
+    </tr>}
+  ):<td colSpan={!isMobile?'7':'5'} className="text-center">
       <Nodata />
     </td>}
   
@@ -266,7 +356,11 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
 
 }
   </div>
+{/* delete recipe comfirmation */}
   <DeleteComfirmation deleteFunction={deleteRecipy} show={show} handleClose={handleClose} isDeleting={isDeleting} deleteItem={'Recipe'}  />
+{/* add to fav list comfirmation */}
+  <DeleteComfirmation deleteFunction={addToFav} show={showFavRecipe} handleClose={handleCloseFavRecipe} isDeleting={isAddingFavLoading} AddToFav={true}  />
+
 
 
 
@@ -293,8 +387,14 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
        
        </>}
        <Modal.Footer>
-        <button type="button" 
-        onClick={handleCloseRecipe} className="btn delete-btn "  >Close</button>
+       {adminData?.userGroup !== 'SystemUser' ? (
+    <button type="button" onClick={handleCloseRecipe} className="btn delete-btn">Close</button>
+  ) : (
+    <button type="button" onClick={addToFav} className="btn delete-btn"  >
+      {isAddingFavLoading ? "Adding..." : "Add To Favorite"}
+    </button>
+  )}
+    
         </Modal.Footer>
       </Modal>
   </>

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { formatDate } from "../../helpers/helpers";
-import { Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { useForm } from "react-hook-form";
-import { addCategoryValidation } from "../../services/validations";
 import { Categories_URLS } from "../../services/api/apiConfig";
 import { axiosPrivateInstance } from "../../services/api/apiInstance";
 
@@ -31,7 +28,7 @@ export default function CategoriesList() {
    const [selectedCategory,setSelectedCategory]=useState(null)
 
    const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
-    const [activePage,setActivePage]=useState(1)
+  const [activePage,setActivePage]=useState(1)
 
     //  get all category fun api
     const getAllCategories=async(pageSize,pageNumber,name)=>{

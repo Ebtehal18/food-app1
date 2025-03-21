@@ -40,8 +40,8 @@ console.log(entries)
 
 try {
    const {data}=recipeId? 
-   await axiosPrivateInstance.put(Recipes_URLS.UPDATE_RECIPE(recipeId),formData):
-   await axiosPrivateInstance.post(Recipes_URLS.CREATE_RECIPE,formData)
+   await axiosPrivateInstance.put(Recipes_URLS.UPDATE_RECIPE(recipeId),formData)
+  :await axiosPrivateInstance.post(Recipes_URLS.CREATE_RECIPE,formData)
   console.log(data)
   toast.success(recipeId?'The Recipe updated successfully':'The Recipe created successfully')
   navigate("/dashboard/recipes")
@@ -200,8 +200,6 @@ try {
   onChange={handelImage}
   filesLimit={1}
   initialFiles={[fileObjects]}
-
-
   Icon={() => <img src={uploadIcon} alt="Upload" width="30"className="mb-2" />}
 
       /> 

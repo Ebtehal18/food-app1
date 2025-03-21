@@ -14,9 +14,22 @@ export const axiosPublicInstance = axios.create({
 // It tells the server that the token is a Bearer Token (used for authorization).
 // Bearer ${token} is necessary because it follows authentication standards.
 
-export const axiosPrivateInstance=axios.create({
+export const axiosPrivateInstance = axios.create({
     baseURL,
-    headers:{
-        Authorization: `Bearer ${localStorage.getItem('token')}`  
+  });
+  
+  // Interceptor to Attach Token Dynamically
+//   Interceptors in Axios allow us to modify requests before they are sent to the server.
+
+  axiosPrivateInstance.interceptors.request.use(
+    (config) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-})
+  );
