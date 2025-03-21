@@ -391,7 +391,10 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
     <button type="button" onClick={handleCloseRecipe} className="btn delete-btn">Close</button>
   ) : (
     <button type="button" onClick={addToFav} className="btn delete-btn"  >
-      {isAddingFavLoading ? "Adding..." : "Add To Favorite"}
+      {isAddingFavLoading ? <>
+                <i className="fa fa-spin fa-spinner"></i>
+                <span> Adding...</span>
+                </>: "Add To Favorite"}
     </button>
   )}
     
