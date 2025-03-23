@@ -493,8 +493,13 @@ width: fit-content;
     right: 20px;
     border: 2px solid rgba(31, 38, 62, 1);
 }
-
+nav .fa-heart{
+    font-size: 21px;
+}
 @media (max-width:768px) {
+    .logo{
+        width: 50%;
+    }
     input{
         font-size: 12px
     }

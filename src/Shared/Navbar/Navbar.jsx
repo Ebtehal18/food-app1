@@ -23,7 +23,7 @@ export default function Navbar() {
     <span className="navbar-toggler-icon" />
   </button>
   <div className="collapse navbar-collapse " id="navbarSupportedContent">
-    <ul className="navbar-nav ms-auto d-flex flex-row  justify-content-between ">
+    <ul className="navbar-nav ms-auto d-flex flex-md-row flex-column  justify-content-between ">
       <li className="nav-item d-flex mt-2 mt-md-0  align-items-center">
 
     {/* Image in case of user (SystemUser) */}
