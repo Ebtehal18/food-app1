@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import logo from '../../assets/images/logo1.png';
 
@@ -12,7 +12,7 @@ export default function AuthLayout() {
           <div className="col-md-6 bg-white rounded-3 px-5 py-4 ">
             <div>
               <div className="auth-logo text-center">
-                <img src={logo} alt="logo"  className=" logo"/>
+                <img src={logo} alt="logo"  className="logo"/>
               </div>
              
     <Outlet/>
