@@ -2,7 +2,7 @@ Food Management System
 
 🚀 Live Demo & Repository
 
-🔗 Live Demo
+🔗 Live Demo [https://reset-forget.vercel.app/]
 
 🔗 GitHub Repository
 
