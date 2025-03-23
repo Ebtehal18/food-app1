@@ -13,7 +13,7 @@ import { CountryValidation, emailValidation, PassComfirmValidation, PhoneValidat
 
 export default function Profile() {
     const [files,setFiles]=useState([])
-    const {currentUser,getCurrentUser}=UseAuthContext()
+    const {currentUser,getCurrentUser,adminData}=UseAuthContext()
      const [showPassword,setShowPassword]=useState(false)
     const {handleSubmit,register,formState:{errors,isSubmitting},setValue}=useForm({
       mode:'onChange'
@@ -85,10 +85,11 @@ return <>
        
         />
 
-        <div className="container profile">
+        <div className="container profile mt-3">
             <div className="row">
                 <div className="col-md-8 m-auto">
                     <form onSubmit={handleSubmit(onSubmit)}>
+                    {adminData?.userGroup==='SystemUser'? 
                         <div className="register-img mb-3">
                           
                         <DropzoneArea
@@ -101,7 +102,7 @@ return <>
                           Icon={() => <img src={uploadIcon} alt="Upload" width="30"className="mb-2" />}
                         
                               /> 
-                        </div>
+                        </div>:null}
                              <div className="input-group mb-3">
                                          <div className="input-group-prepend">
                                           <span className="input-group-text h-100" id="basic-addon1">

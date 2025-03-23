@@ -48,12 +48,12 @@ export default function Navbar() {
         <a className="nav-link" >{currentUser?.userName}</a>
    
       </li>
-  {adminData?.userGroup==='SystemUser'?    <li className="nav-item d-flex mt-2 mt-md-0 d-flex align-items-center mx-4">
+  <li className="nav-item d-flex mt-2 mt-md-0 d-flex align-items-center mx-4">
 
 <Link to='/dashboard/profile' className="text-decoration-none text-black"><i class="fa-solid fa-user me-2 text-success"></i>My Profile</Link>
 
 
-</li>:null}
+</li>
     </ul>
   </div>
 </nav>
