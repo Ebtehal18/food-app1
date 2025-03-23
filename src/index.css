@@ -525,4 +525,7 @@ nav .fa-heart{
         height: 30px;
         object-fit: cover;
     }
+    .no-data-img{
+        width: 200px;
+    }
 }
