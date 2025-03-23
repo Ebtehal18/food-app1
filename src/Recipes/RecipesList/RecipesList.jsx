@@ -379,7 +379,7 @@ getAllRecipes(5,1,searchName,selectTag,e.target.value)
       
         <div className="text-start mt-3 modal-detail px-3">
           <h6 ><i className="fa-solid fa-file-lines me-1"></i> Description: <span>{recipe?.description}</span></h6>
-         {recipe?.category? <h6><i className="fa-regular fa-calendar-days me-1"></i>Category: <span>{recipe?.category[0].name}</span></h6>:<span className="text-danger">none</span>}
+         {recipe?.category? <h6><i className="fa-regular fa-calendar-days me-1"></i>Category: <span>{recipe?.category[0]?.name}</span></h6>:<span className="text-danger">none</span>}
           <h6> <i className="fa-solid fa-tag me-1"></i>Tag: <span>{recipe?.tag['name']}</span></h6>
           <h6> <i className="fa-solid fa-money-bills me-1"></i>Price: <span>{recipe?.price} EGP</span></h6>
         </div>
