@@ -12,6 +12,8 @@ import DeleteComfirmation from "../../Shared/DeleteComfirmation/DeleteComfirmati
 import Loading from "../../Shared/Loading/Loading";
 import CategoryData from "../CategoryData/CategoryData";
 import Pagination from "../../Shared/Pagination/Pagination";
+import { useNavigate } from "react-router-dom";
+import { UseAuthContext } from "../../context/authContext";
 
 
 export default function CategoriesList() {
@@ -29,6 +31,8 @@ export default function CategoriesList() {
 
    const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
   const [activePage,setActivePage]=useState(1)
+  const {adminData}=UseAuthContext()
+  const navigate=useNavigate()
 
     //  get all category fun api
     const getAllCategories=async(pageSize,pageNumber,name)=>{
@@ -70,8 +74,13 @@ export default function CategoriesList() {
   
   
   useEffect(()=>{
-    getAllCategories(5,1)
-  },[])
+    if (adminData?.userGroup==='SuperAdmin'){
+      getAllCategories(5,1)
+
+    }else{
+      navigate("/login")
+    }
+  },[adminData])
 
   // delete modalll
    const handleShowDeleteModal = (id) =>{

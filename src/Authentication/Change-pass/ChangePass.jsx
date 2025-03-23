@@ -49,7 +49,7 @@ try {
                   <div className="col-md-5 bg-white rounded-3 px-5 py-3 w-100 ">
                     <div>
                       <div className="auth-logo text-center">
-                        <img src={logo} alt="logo"  className='logo w-50'/>
+                        <img src={logo} alt="logo"  className='logo'/>
                       </div>
                       </div>
                       <div className="title my-3">

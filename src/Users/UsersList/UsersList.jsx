@@ -13,6 +13,8 @@ import { Modal } from "react-bootstrap";
 import { BeatLoader } from "react-spinners";
 import { formatDate } from "../../helpers/helpers";
 import Pagination from "../../Shared/Pagination/Pagination";
+import { UseAuthContext } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 export default function UsersList() {
   const [loading,setLoading]=useState(true)
@@ -28,8 +30,10 @@ export default function UsersList() {
   const [userCountry,setUserCountry]=useState('')
   const [userRole,setUserRole]=useState('')
 
-    const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
-    const [activePage,setActivePage]=useState(1)
+  const [totalNumberOfPages,setTotalNumberOfPages]=useState([])
+  const [activePage,setActivePage]=useState(1)
+  const {adminData}=UseAuthContext()
+  const navigate=useNavigate()
 
 
   const[show,setShow]=useState(false)
@@ -123,19 +127,26 @@ getAllUsers(15,1,userName,userEmail,userCountry,e.target.value)
 
 
   useEffect(()=>{
-  getAllUsers(15,1)
+    if (adminData?.userGroup==='SuperAdmin'){
+      getAllUsers(15,1)
 
-const handelIsMobile=()=>{
-  setIsMobile(window.innerWidth<=768)
-}
-handelIsMobile()
-window.addEventListener('resize',handelIsMobile)
-return ()=>{
-  window.removeEventListener('resize',handelIsMobile)
-}
-  },[])
+    }else{
+      navigate("/login")
+    }
+  },[adminData])
 
+  useEffect(() => {
+    const handleIsMobile = () => {
+        setIsMobile(window.innerWidth <= 768);
+    };
 
+    handleIsMobile(); 
+    window.addEventListener('resize', handleIsMobile);
+
+    return () => {
+        window.removeEventListener('resize', handleIsMobile);
+    };
+}, []); 
   
   return <>
   <Header 

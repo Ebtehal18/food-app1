@@ -36,9 +36,8 @@ useEffect(() => {
   // to handel referesh the page in case we logedin 
 
   if(localStorage.getItem('token')) {
-    // console.log(localStorage.getItem('token'))
-   
-  // await getCurrentUser()/
+    // console.log(localStorage.getItem('token'))   
+   getCurrentUser()
     fillAdminData()
   
   

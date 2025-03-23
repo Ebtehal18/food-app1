@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { axiosPrivateInstance, imgURL } from "../services/api/apiInstance";
 import { UserRecipes_URLS } from "../services/api/apiConfig";
+import { toast } from "react-toastify";
+import { UseAuthContext } from "../context/authContext";
 
 import Header from "../Shared/Header/Header";
 import categoryImgHeader from '../assets/images/categoryimg-header.svg';
@@ -8,7 +10,7 @@ import Nodata from "../Shared/Nodata/Nodata"
 import Loading from "../Shared/Loading/Loading";
 import noimg from '../assets/images/no-plate2.jpg';
 import DeleteComfirmation from "../Shared/DeleteComfirmation/DeleteComfirmation";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -19,6 +21,8 @@ export default function Favorits() {
   const [isDeleting,setIsDeleting]=useState(false)
   
   const [show, setShow] = useState(false);
+  const {adminData}=UseAuthContext()
+const navigate=useNavigate()
 
     const handleShow = (id) => {
       // console.log(id)
@@ -65,8 +69,13 @@ export default function Favorits() {
   }
 
   useEffect(()=>{
-getFavList()
-  },[])
+    if (adminData?.userGroup==='SuperAdmin'){
+      navigate("/login")
+    }else{
+      getFavList()
+    }
+
+  },[adminData])
   return <>    <Header 
           title={'Favorite'} 
           img={<img src={categoryImgHeader} alt="category header img"/>}
