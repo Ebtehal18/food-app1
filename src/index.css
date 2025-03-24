@@ -460,9 +460,26 @@ width: fit-content;
 .css-fksjaj {
     justify-content: center;
 }
-.alert{
+.alert-danger{
+    /* min-height: 24px; Adjust based on error message height */
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    /* margin-bottom: 0; */
+    /* visibility: hidden; */
 }
+
+/* .alert-danger:empty {
+    display: block;
+  }
+  
+  .alert-danger:not(:empty) {
+    visibility: visible;
+  } */
+  /* .form-group {
+    display: grid;
+    grid-template-rows: auto 1fr;  /* Input takes auto height, error takes fixed space */
+  /* }  */
 .navbar .dropdown-toggle::after {
     display:none;
  

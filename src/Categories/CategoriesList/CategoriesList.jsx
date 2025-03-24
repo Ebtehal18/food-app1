@@ -74,11 +74,12 @@ export default function CategoriesList() {
   
   
   useEffect(()=>{
-    if (adminData?.userGroup==='SuperAdmin'){
-      getAllCategories(5,1)
-
-    }else{
+ 
+    if (adminData?.userGroup==='SystemUser'){
       navigate("/login")
+      
+    }else{
+      getAllCategories(5,1)
     }
   },[adminData])
 

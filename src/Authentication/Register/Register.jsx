@@ -83,7 +83,7 @@ if(files[0]){
             {...register('userName',UserNameValidation)}
               type="text" className="form-control" placeholder="UserName" aria-label="usrname" aria-describedby="basic-addon1"/>
               </div>
-              {errors.userName  && <div className=" mb-3 alert-danger alert">{errors.userName.message}</div>}
+              {errors.userName  ? <div className=" mb-3 alert-danger alert">{errors.userName.message}</div>:null}
   
               {/* country input */}
                 <div className="input-group mb-3">
@@ -96,7 +96,7 @@ if(files[0]){
             {...register('country',CountryValidation)}
               type="text" className="form-control" placeholder="Country" aria-label="Country" aria-describedby="basic-addon1"/>
               </div>
-              {errors.country && <div className=" mb-3 alert-danger alert">{errors.country.message}</div>}
+              {errors.country ? <div className=" mb-3 alert-danger alert">{errors.country.message}</div>:null}
 
               
               {/* password input */}
@@ -119,7 +119,7 @@ if(files[0]){
     </span>
             </span>
               </div>
-              {errors.password && <div className="mb-3 alert-danger alert">{errors.password.message}</div>}
+              {errors.password ? <div className="mb-3 alert-danger alert">{errors.password.message}</div>:null}
   
   
           
@@ -138,7 +138,7 @@ if(files[0]){
             {...register('email',emailValidation)}
               type="email" className="form-control" placeholder="Enter your E-mail" aria-label="Email" aria-describedby="basic-addon1"/>
               </div>
-              {errors.email && <div className=" mb-3 alert-danger alert">{errors.email.message}</div>}
+              {errors.email ? <div className=" mb-3 alert-danger alert">{errors.email.message}</div>:null }
   
              {/* PhoneNumber input */}
              <div className="input-group mb-3">
@@ -151,7 +151,7 @@ if(files[0]){
             {...register('phoneNumber',PhoneValidation)}
               type="number" className="form-control" placeholder="PhoneNumber" aria-label="PhoneNumber" aria-describedby="basic-addon1"/>
               </div>
-              {errors.phoneNumber && <div className=" mb-3 alert-danger alert">{errors.phoneNumber.message}</div>}
+              {errors.phoneNumber ? <div className=" mb-3 alert-danger alert">{errors.phoneNumber.message}</div>:null}
              
              {/* comfirmpassword input */}
              <div className="input-group mb-3 ">
@@ -176,7 +176,7 @@ if(files[0]){
     </span>
             </span>
               </div>
-              {errors.confirmPassword && <div className="mb-3 alert-danger alert">{errors.confirmPassword.message}</div>}
+              {errors.confirmPassword ? <div className="mb-3 alert-danger alert">{errors.confirmPassword.message}</div>:null}
   
               
             </div>

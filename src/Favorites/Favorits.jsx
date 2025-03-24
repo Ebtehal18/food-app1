@@ -3,6 +3,7 @@ import { axiosPrivateInstance, imgURL } from "../services/api/apiInstance";
 import { UserRecipes_URLS } from "../services/api/apiConfig";
 import { toast } from "react-toastify";
 import { UseAuthContext } from "../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 import Header from "../Shared/Header/Header";
 import categoryImgHeader from '../assets/images/categoryimg-header.svg';
@@ -10,7 +11,6 @@ import Nodata from "../Shared/Nodata/Nodata"
 import Loading from "../Shared/Loading/Loading";
 import noimg from '../assets/images/no-plate2.jpg';
 import DeleteComfirmation from "../Shared/DeleteComfirmation/DeleteComfirmation";
-import { useNavigate } from "react-router-dom";
 
 
 
@@ -76,6 +76,8 @@ const navigate=useNavigate()
     }
 
   },[adminData])
+
+
   return <>    <Header 
           title={'Favorite'} 
           img={<img src={categoryImgHeader} alt="category header img"/>}
@@ -84,7 +86,9 @@ const navigate=useNavigate()
 
           <div className="container">
             <div className="row g-4 mt-4 mx-1 ">
-            {loading?<Loading/>:favList.length>0? favList.map((fav)=>   <div className="col-md-4" key={fav.id}>
+            {loading?<Loading/>
+            :favList.length>0? 
+            favList.map((fav)=>   <div className="col-md-4" key={fav.id}>
             <div className="card favorite position-relative ">
   <img src={fav.recipe.imagePath?`${imgURL}/${fav.recipe.imagePath}`:noimg} className="card-img-top" alt={fav.recipe.name} />
   <div className="card-body">
@@ -97,7 +101,8 @@ const navigate=useNavigate()
   <span className="heart  position-absolute bg-white p-2" onClick={()=>handleShow(fav.id)}><i className="fa-solid fa-heart fs-5"></i></span>
 </div>
                
-                </div>):<Nodata/>}
+                </div>)
+                :<Nodata/>}
              
             </div>
           </div>

@@ -127,13 +127,23 @@ getAllUsers(15,1,userName,userEmail,userCountry,e.target.value)
 
 
   useEffect(()=>{
-    if (adminData?.userGroup==='SuperAdmin'){
-      getAllUsers(15,1)
-
-    }else{
+    // in refersh 
+    // if (adminData?.userGroup === 'SuperAdmin') {
+      //     getAllCategories(5, 1);  // ❌ Doesn't run because adminData is null
+      // } else {
+      //     navigate("/login");  // ✅ Runs because adminData is null
+      // }
+      
+    if (adminData?.userGroup==='SystemUser'){
       navigate("/login")
+      
+    }else{
+      getAllUsers(15,1)
     }
+    // Here, navigate("/login") never runs on first render, 
+    // since the condition waits for adminData to be something other than null before deciding.
   },[adminData])
+
 
   useEffect(() => {
     const handleIsMobile = () => {
